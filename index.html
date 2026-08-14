@@ -14,11 +14,11 @@
   <!-- HanziWriter Engine CDN -->
   <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
 
-  <!-- External Stylesheets -->
+  <!-- External Stylesheets (Fallback) -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
 
-  <!-- Embedded Core Design System (Memastikan Tampilan Selalu Rapi & Indah 100% Tanpa Terkendala Path/Offline) -->
+  <!-- Embedded Core Design System (Memastikan Tampilan Selalu Rapi & Indah 100%) -->
   <style>
     :root {
       --dino-green-deep: #1b5e20;
@@ -433,6 +433,7 @@
       cursor: pointer;
       outline: none;
       transition: all 0.2s ease;
+      min-width: 140px;
     }
 
     .dino-select-primary:hover, .dino-select-primary:focus {
@@ -1607,26 +1608,46 @@
       <!-- Curriculum & Repetition Selector Bar -->
       <div class="curriculum-selector-bar">
         <div class="selector-group">
-          <!-- Pilih Buku Han Yu -->
+          <!-- Pilih Buku Han Yu (Pre-populated) -->
           <div class="filter-select-item">
             <label for="stroke-book-select" class="filter-label">📖 Buku:</label>
             <select id="stroke-book-select" class="dino-select-primary">
-              <!-- Populated via JS (Han Yu 1 - 12) -->
+              <option value="1" selected>Han Yu 1 (汉语 第一册)</option>
+              <option value="2">Han Yu 2 (汉语 第二册)</option>
+              <option value="3">Han Yu 3 (汉语 第三册)</option>
+              <option value="4">Han Yu 4 (汉语 第四册)</option>
+              <option value="5">Han Yu 5 (汉语 第五册)</option>
+              <option value="6">Han Yu 6 (汉语 第六册)</option>
+              <option value="7">Han Yu 7 (汉语 第七册)</option>
+              <option value="8">Han Yu 8 (汉语 第八册)</option>
+              <option value="9">Han Yu 9 (汉语 第九册)</option>
+              <option value="10">Han Yu 10 (汉语 第十册)</option>
+              <option value="11">Han Yu 11 (汉语 第十一册)</option>
+              <option value="12">Han Yu 12 (汉语 第十二册)</option>
             </select>
           </div>
 
-          <!-- Pilih Unit -->
+          <!-- Pilih Unit (Pre-populated) -->
           <div class="filter-select-item">
             <label for="stroke-unit-select" class="filter-label">📑 Unit:</label>
             <select id="stroke-unit-select" class="dino-select-primary">
-              <!-- Populated via JS -->
+              <option value="1" selected>Unit 1 (Angka 1-10)</option>
+              <option value="2">Unit 2 (Alam & Tubuh Dasar)</option>
+              <option value="3">Unit 3 (Sapaan & Kata Ganti)</option>
+              <option value="4">Unit 4 (Keluarga)</option>
+              <option value="5">Unit 5 (Ukuran & Satuan)</option>
+              <option value="6">Unit 6 (Arah & Posisi)</option>
+              <option value="7">Unit 7 (Cuaca & Alam)</option>
+              <option value="8">Unit 8 (Benda Kelas)</option>
+              <option value="9">Unit 9 (Makanan & Minuman)</option>
+              <option value="10">Unit 10 (Aktivitas & Gerakan)</option>
             </select>
           </div>
 
           <!-- Target Repetisi (3-5x) -->
           <div class="filter-select-item">
             <label for="stroke-reps-target" class="filter-label">🎯 Target Latihan:</label>
-            <select id="stroke-reps-target" class="dino-select-primary">
+            <select id="stroke-reps-target" class="dino-select-primary" style="min-width: 170px;">
               <option value="3" selected>3 Kali Tulis (Standard)</option>
               <option value="4">4 Kali Tulis (Tantangan)</option>
               <option value="5">5 Kali Tulis (Master Dino)</option>
@@ -1792,8 +1813,20 @@
 
           <div class="difficulty-picker">
             <div class="filter-select-item" style="margin-right: 6px;">
-              <select id="match-book-select" class="dino-select-primary" style="padding: 6px 12px; font-size: 0.85rem;">
-                <!-- Populated via JS -->
+              <select id="match-book-select" class="dino-select-primary" style="padding: 6px 12px; font-size: 0.85rem; min-width: 140px;">
+                <option value="all" selected>Semua Buku (Han Yu 1 - 12)</option>
+                <option value="1">Han Yu 1</option>
+                <option value="2">Han Yu 2</option>
+                <option value="3">Han Yu 3</option>
+                <option value="4">Han Yu 4</option>
+                <option value="5">Han Yu 5</option>
+                <option value="6">Han Yu 6</option>
+                <option value="7">Han Yu 7</option>
+                <option value="8">Han Yu 8</option>
+                <option value="9">Han Yu 9</option>
+                <option value="10">Han Yu 10</option>
+                <option value="11">Han Yu 11</option>
+                <option value="12">Han Yu 12</option>
               </select>
             </div>
             <button class="diff-btn active" data-pairs="4">Bayi Dino (4 Pasang)</button>
@@ -1811,7 +1844,7 @@
         </div>
       </div>
 
-      <!-- Pop-up Toast Notifikasi Sukses Jawaban Benar (Gambar + Hanzi + Pinyin + Arti Lengkap) -->
+      <!-- Pop-up Toast Notifikasi Sukses Jawaban Benar -->
       <div class="match-toast-container" id="match-success-toast">
         <!-- Rendered via JS -->
       </div>
@@ -1874,8 +1907,12 @@
         <div class="quiz-filter-bar">
           <div class="filter-select-item">
             <label for="quiz-filter-select" class="filter-label">🎯 Pilihan Mode Kuis:</label>
-            <select id="quiz-filter-select" class="dino-select-primary">
-              <!-- Populated via JS -->
+            <select id="quiz-filter-select" class="dino-select-primary" style="min-width: 220px;">
+              <option value="all" selected>🌟 Semua Soal (Guratan + Kosakata Han Yu 1 - 12)</option>
+              <option value="stroke-only">✍️ Khusus Kuis Jumlah Guratan (1, 3, 4, 5, 6, 7, 11)</option>
+              <option value="book-1">📖 Han Yu 1 (Dasar & Angka 1-10)</option>
+              <option value="book-2">📖 Han Yu 2 (Dinosaurus, Tubuh & Warna)</option>
+              <option value="book-3-12">📚 Han Yu 3 s/d 12 (Tingkat Lanjut)</option>
             </select>
           </div>
           <div style="font-size: 0.9rem; font-weight: 700; color: var(--dino-green-deep);">
@@ -1905,7 +1942,7 @@
             Pertanyaan kuis sedang dimuat...
           </h3>
 
-          <!-- Media Display Pertanyaan (Hanzi Besar / Gambar / Target Guratan) -->
+          <!-- Media Display Pertanyaan -->
           <div class="question-media-wrap" id="quiz-question-media">
             <!-- Rendered via JS -->
           </div>
