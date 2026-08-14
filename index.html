@@ -171,6 +171,32 @@
         window.location.href = linkOutput.value;
       }
     };
+
+    window.onStrokeBookChanged = function(bookId) {
+      var bId = parseInt(bookId) || 1;
+      var uSel = document.getElementById('stroke-unit-select');
+      if (uSel && window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) {
+        var titles = window.DINO_DATA.unitTitles[bId];
+        var html = '';
+        for (var u = 1; u <= 10; u++) {
+          var theme = titles[u] || ('Pelajaran ' + u);
+          html += '<option value="' + u + '">Unit ' + u + ' (' + theme + ')</option>';
+        }
+        uSel.innerHTML = html;
+      }
+      if (window.strokeWriterApp) {
+        window.strokeWriterApp.loadBookUnit(bId, uSel ? uSel.value : 1);
+      }
+    };
+
+    window.onStrokeUnitChanged = function(unitId) {
+      var uId = parseInt(unitId) || 1;
+      var bSel = document.getElementById('stroke-book-select');
+      var bId = bSel ? (parseInt(bSel.value) || 1) : 1;
+      if (window.strokeWriterApp) {
+        window.strokeWriterApp.loadBookUnit(bId, uId);
+      }
+    };
   </script>
 
   <!-- External Stylesheets (Fallback) -->
@@ -2050,7 +2076,7 @@
           <!-- Pilih Buku Han Yu -->
           <div class="filter-select-item">
             <label for="stroke-book-select" class="filter-label">📖 Buku:</label>
-            <select id="stroke-book-select" class="dino-select-primary" onchange="if(window.strokeWriterApp){ window.strokeWriterApp.updateUnitSelect(this.value); const uSel = document.getElementById('stroke-unit-select'); window.strokeWriterApp.loadBookUnit(this.value, uSel ? uSel.value : 1); }">
+            <select id="stroke-book-select" class="dino-select-primary" onchange="window.onStrokeBookChanged(this.value)">
               <option value="1" selected>Han Yu 1 (汉语 第一册)</option>
               <option value="2">Han Yu 2 (汉语 第二册)</option>
               <option value="3">Han Yu 3 (汉语 第三册)</option>
@@ -2069,7 +2095,7 @@
           <!-- Pilih Unit -->
           <div class="filter-select-item">
             <label for="stroke-unit-select" class="filter-label">📑 Unit:</label>
-            <select id="stroke-unit-select" class="dino-select-primary" onchange="if(window.strokeWriterApp){ const bSel = document.getElementById('stroke-book-select'); window.strokeWriterApp.loadBookUnit(bSel ? bSel.value : 1, this.value); }">
+            <select id="stroke-unit-select" class="dino-select-primary" onchange="window.onStrokeUnitChanged(this.value)">
               <option value="1" selected>Unit 1 (Angka 1-10)</option>
               <option value="2">Unit 2 (Alam & Tubuh Dasar)</option>
               <option value="3">Unit 3 (Sapaan & Kata Ganti)</option>
@@ -5560,6 +5586,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 </body>
 </html>
+
 
 
 
