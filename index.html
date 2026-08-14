@@ -2308,5 +2308,34 @@
   <script src="js/match-game.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- Embedded Bulletproof Link Generator (Bypass Cache GitHub) -->
+  <script>
+    // Pastikan fungsi selalu tersedia secara global & instan
+    window.openTeacherLinkModal = function() {
+      var modal = document.getElementById('teacher-link-modal');
+      if (modal) {
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+        if (typeof window.updateGeneratorForm === 'function') {
+          window.updateGeneratorForm();
+        } else {
+          var out = document.getElementById('gen-link-output');
+          if (out) out.value = window.location.href.split('?')[0] + '?mod=stroke&book=1&unit=1&reps=3&task=' + encodeURIComponent('PR Han Yu 1 Unit 1');
+        }
+        if (window.dinoAudio && typeof window.dinoAudio.playSfx === 'function') {
+          window.dinoAudio.playSfx('pop');
+        }
+      }
+    };
+
+    window.closeTeacherLinkModal = function() {
+      var modal = document.getElementById('teacher-link-modal');
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+      }
+    };
+  </script>
 </body>
 </html>
