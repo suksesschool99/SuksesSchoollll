@@ -119,6 +119,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnShareWA = document.getElementById('btn-share-whatsapp');
   const btnTestLink = document.getElementById('btn-test-gen-link');
 
+  // Definisi Global Buka & Tutup Modal Generator Tugas
+  window.openTeacherLinkModal = function() {
+    const modal = document.getElementById('teacher-link-modal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'flex';
+      if (typeof window.updateGeneratorForm === 'function') {
+        window.updateGeneratorForm();
+      }
+      if (window.dinoAudio && typeof window.dinoAudio.playSfx === 'function') {
+        window.dinoAudio.playSfx('pop');
+      }
+    }
+  };
+
+  window.closeTeacherLinkModal = function() {
+    const modal = document.getElementById('teacher-link-modal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  };
+
   // Buka & Tutup Modal via Event Listener
   if (btnOpenModal) {
     btnOpenModal.addEventListener('click', (e) => {
