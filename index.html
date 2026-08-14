@@ -2302,8 +2302,8 @@
       <!-- Form Generator -->
       <div class="teacher-form-group">
         <label for="gen-module-select" class="form-group-label">1. Pilih Jenis Modul Latihan:</label>
-        <select id="gen-module-select" class="form-select-wide">
-          <option value="stroke">✍️ Modul 1: Latihan Menulis Guratan (3-5x)</option>
+        <select id="gen-module-select" class="form-select-wide" onchange="window.refreshTeacherTaskLink(true)">
+          <option value="stroke" selected>✍️ Modul 1: Latihan Menulis Guratan (3-5x)</option>
           <option value="match">🧩 Modul 2: Game Mencocokkan Kartu Bergambar</option>
           <option value="quiz">📝 Modul 3: Kuis Jumlah Guratan & Kosakata</option>
         </select>
@@ -2312,8 +2312,8 @@
       <!-- Konfigurasi Buku Han Yu -->
       <div class="teacher-form-group" id="gen-book-group">
         <label for="gen-book-select" class="form-group-label">2. Pilih Buku Han Yu:</label>
-        <select id="gen-book-select" class="form-select-wide">
-          <option value="1">Han Yu 1 (汉语 第一册)</option>
+        <select id="gen-book-select" class="form-select-wide" onchange="window.refreshTeacherTaskLink(true)">
+          <option value="1" selected>Han Yu 1 (汉语 第一册)</option>
           <option value="2">Han Yu 2 (汉语 第二册)</option>
           <option value="3">Han Yu 3 (汉语 第三册)</option>
           <option value="4">Han Yu 4 (汉语 第四册)</option>
@@ -2331,25 +2331,25 @@
       <!-- Konfigurasi Unit (Khusus Modul 1) -->
       <div class="teacher-form-group" id="gen-unit-group">
         <label for="gen-unit-select" class="form-group-label">3. Pilih Unit:</label>
-        <select id="gen-unit-select" class="form-select-wide">
-          <option value="1">Unit 1</option>
-          <option value="2">Unit 2</option>
-          <option value="3">Unit 3</option>
-          <option value="4">Unit 4</option>
-          <option value="5">Unit 5</option>
-          <option value="6">Unit 6</option>
-          <option value="7">Unit 7</option>
-          <option value="8">Unit 8</option>
-          <option value="9">Unit 9</option>
-          <option value="10">Unit 10</option>
+        <select id="gen-unit-select" class="form-select-wide" onchange="window.refreshTeacherTaskLink(false)">
+          <option value="1">Unit 1 (Angka 1-10)</option>
+          <option value="2">Unit 2 (Alam & Tubuh Dasar)</option>
+          <option value="3">Unit 3 (Sapaan & Kata Ganti)</option>
+          <option value="4">Unit 4 (Keluarga)</option>
+          <option value="5">Unit 5 (Ukuran & Satuan)</option>
+          <option value="6">Unit 6 (Arah & Posisi)</option>
+          <option value="7">Unit 7 (Cuaca & Benda Alam)</option>
+          <option value="8">Unit 8 (Benda Kelas & Rumah)</option>
+          <option value="9">Unit 9 (Makanan & Minuman)</option>
+          <option value="10">Unit 10 (Gerakan & Aktivitas)</option>
         </select>
       </div>
 
       <!-- Konfigurasi Target Repetisi / Tingkat Kesulitan -->
       <div class="teacher-form-group" id="gen-target-group">
         <label for="gen-target-select" class="form-group-label" id="gen-target-label">4. Target Repetisi Tulis:</label>
-        <select id="gen-target-select" class="form-select-wide">
-          <option value="3">3 Kali Tulis (Standard)</option>
+        <select id="gen-target-select" class="form-select-wide" onchange="window.refreshTeacherTaskLink(false)">
+          <option value="3" selected>3 Kali Tulis (Standard)</option>
           <option value="4">4 Kali Tulis (Tantangan)</option>
           <option value="5">5 Kali Tulis (Master Dino)</option>
         </select>
@@ -2358,7 +2358,7 @@
       <!-- Judul / Catatan Tugas -->
       <div class="teacher-form-group">
         <label for="gen-task-name" class="form-group-label">5. Nama / Catatan Tugas untuk Siswa:</label>
-        <input type="text" id="gen-task-name" class="form-input-wide" placeholder="Contoh: PR Han Yu 1 Unit 2 - Kelas 2A" value="PR Mandiri Han Yu 1 Unit 1">
+        <input type="text" id="gen-task-name" class="form-input-wide" placeholder="Contoh: PR Han Yu 1 Unit 2 - Kelas 2A" value="PR Han Yu 1 Unit 1 (Angka 1-10)" oninput="window.refreshTeacherTaskLink(false)">
       </div>
 
       <!-- Kotak Link yang Dihasilkan -->
@@ -2366,20 +2366,20 @@
         <div style="font-size: 0.88rem; font-weight: 700; color: #1b5e20; margin-bottom: 6px;">
           🔗 Link Tugas Siswa Siap Dibagikan:
         </div>
-        <input type="text" readonly id="gen-link-output" class="link-preview-input" value="https://...">
+        <input type="text" readonly id="gen-link-output" class="link-preview-input" value="" onclick="this.select()">
 
         <div class="link-actions-grid">
-          <button class="dino-btn primary-btn" id="btn-copy-gen-link">
+          <button class="dino-btn primary-btn" id="btn-copy-gen-link" onclick="window.copyTeacherTaskLink()">
             <span>📋</span> Salin Link
           </button>
-          <button class="dino-btn whatsapp-btn" id="btn-share-whatsapp">
+          <button class="dino-btn whatsapp-btn" id="btn-share-whatsapp" onclick="window.shareTeacherTaskWA()">
             <span>📱</span> Kirim ke WA
           </button>
         </div>
       </div>
 
       <div style="margin-top: 14px; text-align: center;">
-        <button class="dino-btn outline-btn" id="btn-test-gen-link" style="width: 100%; font-size: 0.95rem;">
+        <button class="dino-btn outline-btn" id="btn-test-gen-link" onclick="window.testTeacherTaskLink()" style="width: 100%; font-size: 0.95rem;">
           🧪 Uji Buka Tampilan Tugas Ini Sekarang
         </button>
       </div>
@@ -5388,5 +5388,6 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 </body>
 </html>
+
 
 
