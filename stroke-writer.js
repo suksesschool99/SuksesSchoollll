@@ -113,6 +113,15 @@ class DinoStrokeWriter {
 
     if (!window.DINO_DATA || !window.DINO_DATA.vocabList) return;
 
+    // Pastikan pilihan dropdown buku & unit sinkron 100%
+    this.updateUnitSelect(this.currentBookId);
+    if (this.bookSelector) {
+      this.bookSelector.value = this.currentBookId;
+    }
+    if (this.unitSelector) {
+      this.unitSelector.value = this.currentUnitId;
+    }
+
     // Ambil daftar kosakata untuk buku & unit ini
     let list = window.DINO_DATA.vocabList.filter(v => v.book === this.currentBookId && v.unit === this.currentUnitId);
     if (list.length === 0) {
