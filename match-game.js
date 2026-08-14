@@ -26,6 +26,23 @@ class DinoMatchGame {
     this.cacheDom();
     this.populateBookFilter();
     this.bindEvents();
+
+    const params = new URLSearchParams(window.location.search);
+    const mod = params.get('mod') || params.get('module');
+    const book = params.get('book');
+    const pairs = parseInt(params.get('pairs')) || 4;
+
+    if (mod === 'match' || book) {
+      if (book) {
+        this.selectedBook = book;
+        if (this.bookSelect) this.bookSelect.value = book;
+      }
+      this.difficulty = pairs;
+      this.diffButtons.forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.getAttribute('data-pairs')) === pairs);
+      });
+    }
+
     this.startNewGame();
   }
 

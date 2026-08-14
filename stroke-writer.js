@@ -32,7 +32,21 @@ class DinoStrokeWriter {
     this.cacheDom();
     this.populateBookAndUnitSelects();
     this.bindEvents();
-    this.loadBookUnit(1, 1);
+
+    // Baca parameter URL tugas secara langsung & instan saat halaman dibuka
+    const params = new URLSearchParams(window.location.search);
+    const mod = params.get('mod') || params.get('module');
+    const book = parseInt(params.get('book')) || 1;
+    const unit = parseInt(params.get('unit')) || 1;
+    const reps = parseInt(params.get('reps')) || 3;
+
+    if (mod === 'stroke' || params.has('book') || params.has('unit')) {
+      this.targetReps = reps;
+      if (this.repsSelector) this.repsSelector.value = reps;
+      this.loadBookUnit(book, unit);
+    } else {
+      this.loadBookUnit(1, 1);
+    }
   }
 
   cacheDom() {

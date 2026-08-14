@@ -19,6 +19,18 @@ class DinoQuiz {
     this.cacheDom();
     this.populateFilterDropdown();
     this.bindEvents();
+
+    const params = new URLSearchParams(window.location.search);
+    const mod = params.get('mod') || params.get('module');
+    const qmode = params.get('qmode');
+
+    if (mod === 'quiz' || qmode) {
+      if (qmode) {
+        this.filterType = qmode;
+        if (this.quizFilterSelect) this.quizFilterSelect.value = qmode;
+      }
+    }
+
     this.startQuiz();
   }
 
