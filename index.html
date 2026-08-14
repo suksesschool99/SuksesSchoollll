@@ -5068,15 +5068,95 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnShareWA = document.getElementById('btn-share-whatsapp');
   const btnTestLink = document.getElementById('btn-test-gen-link');
 
-  // Definisi Global Buka & Tutup Modal Generator Tugas
+  // ==========================================================================
+  // 4. FITUR PEMBUAT LINK TUGAS BERTAHAP (TEACHER LINK GENERATOR)
+  // ==========================================================================
+  window.refreshTeacherTaskLink = function(isBookChanged) {
+    const modSel = document.getElementById('gen-module-select');
+    const bookSel = document.getElementById('gen-book-select');
+    const unitSel = document.getElementById('gen-unit-select');
+    const targetSel = document.getElementById('gen-target-select');
+    const taskInput = document.getElementById('gen-task-name');
+    const linkOutput = document.getElementById('gen-link-output');
+    const bookGrp = document.getElementById('gen-book-group');
+    const unitGrp = document.getElementById('gen-unit-group');
+    const targetGrp = document.getElementById('gen-target-group');
+    const targetLbl = document.getElementById('gen-target-label');
+
+    if (!modSel || !linkOutput) return;
+
+    const mod = modSel.value || 'stroke';
+    const book = (bookSel ? bookSel.value : '1') || '1';
+
+    // Rebuild unit dropdown dynamically if book changed or options lack detail
+    if (unitSel && (isBookChanged || unitSel.options.length <= 1 || !unitSel.options[0].text.includes('('))) {
+      const bId = parseInt(book) || 1;
+      const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
+      const curVal = unitSel.value || '1';
+      let html = '';
+      for (let u = 1; u <= 10; u++) {
+        const title = unitTitlesMap[u] || `Unit ${u}`;
+        html += `<option value="${u}" ${u == curVal ? 'selected' : ''}>Unit ${u} (${title})</option>`;
+      }
+      unitSel.innerHTML = html;
+    }
+
+    const unit = (unitSel ? unitSel.value : '1') || '1';
+    const target = (targetSel ? targetSel.value : '3') || '3';
+
+    if (mod === 'stroke') {
+      if (bookGrp) bookGrp.style.display = 'block';
+      if (unitGrp) unitGrp.style.display = 'block';
+      if (targetGrp) targetGrp.style.display = 'block';
+      if (targetLbl) targetLbl.textContent = '4. Target Repetisi Tulis:';
+      if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.startsWith('PR') || taskInput.value.startsWith('Tugas') || taskInput.value.startsWith('Kuis'))) {
+        const bId = parseInt(book) || 1;
+        const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
+        const uName = unitTitlesMap[unit] || '';
+        taskInput.value = `PR Han Yu ${book} Unit ${unit}${uName ? ' (' + uName + ')' : ''}`;
+      }
+    } else if (mod === 'match') {
+      if (bookGrp) bookGrp.style.display = 'block';
+      if (unitGrp) unitGrp.style.display = 'none';
+      if (targetGrp) targetGrp.style.display = 'block';
+      if (targetLbl) targetLbl.textContent = '4. Jumlah Pasangan Kartu:';
+      if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.startsWith('PR') || taskInput.value.startsWith('Tugas') || taskInput.value.startsWith('Kuis'))) {
+        taskInput.value = `Tugas Game Cocokkan Han Yu ${book}`;
+      }
+    } else if (mod === 'quiz') {
+      if (bookGrp) bookGrp.style.display = 'none';
+      if (unitGrp) unitGrp.style.display = 'none';
+      if (targetGrp) targetGrp.style.display = 'block';
+      if (targetLbl) targetLbl.textContent = '4. Kategori Kuis:';
+      if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.startsWith('PR') || taskInput.value.startsWith('Tugas') || taskInput.value.startsWith('Kuis'))) {
+        taskInput.value = `Kuis Jumlah Guratan & Kosakata Han Yu`;
+      }
+    }
+
+    const taskTitle = encodeURIComponent((taskInput ? taskInput.value.trim() : '') || 'Tugas Siswa');
+    const baseUrl = window.location.href.split('?')[0];
+
+    let query = `?mod=${mod}&task=${taskTitle}`;
+    if (mod === 'stroke') {
+      query += `&book=${book}&unit=${unit}&reps=${target}`;
+    } else if (mod === 'match') {
+      query += `&book=${book}&pairs=${target}`;
+    } else if (mod === 'quiz') {
+      query += `&qmode=${target}`;
+    }
+
+    linkOutput.value = baseUrl + query;
+  };
+
+  // Alias
+  window.updateGeneratorForm = window.refreshTeacherTaskLink;
+
   window.openTeacherLinkModal = function() {
     const modal = document.getElementById('teacher-link-modal');
     if (modal) {
       modal.classList.add('show');
       modal.style.display = 'flex';
-      if (typeof window.updateGeneratorForm === 'function') {
-        window.updateGeneratorForm();
-      }
+      window.refreshTeacherTaskLink(true);
       if (window.dinoAudio && typeof window.dinoAudio.playSfx === 'function') {
         window.dinoAudio.playSfx('pop');
       }
@@ -5091,149 +5171,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Buka & Tutup Modal via Event Listener
-  if (btnOpenModal) {
-    btnOpenModal.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.openTeacherLinkModal();
-    });
-  }
-
-  if (btnCloseModal) {
-    btnCloseModal.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.closeTeacherLinkModal();
-    });
-  }
-
-  if (modalLink) {
-    modalLink.addEventListener('click', (e) => {
-      if (e.target === modalLink) window.closeTeacherLinkModal();
-    });
-  }
-
-  function updateGeneratorUnitOptions(bookId) {
-    if (!genUnitSelect) return;
-    const bId = parseInt(bookId) || 1;
-    const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
-    
-    let html = '';
-    for (let u = 1; u <= 10; u++) {
-      const title = unitTitlesMap[u] || `Unit ${u}`;
-      html += `<option value="${u}">Unit ${u} (${title})</option>`;
+  window.copyTeacherTaskLink = function() {
+    const linkOutput = document.getElementById('gen-link-output');
+    const btnCopy = document.getElementById('btn-copy-gen-link');
+    if (linkOutput && linkOutput.value) {
+      linkOutput.select();
+      navigator.clipboard.writeText(linkOutput.value).then(() => {
+        if (btnCopy) btnCopy.innerHTML = '✅ Link Tersalin!';
+        if (window.dinoAudio) window.dinoAudio.playSfx('correct');
+        setTimeout(() => { if (btnCopy) btnCopy.innerHTML = '<span>📋</span> Salin Link'; }, 2000);
+      }).catch(() => {
+        document.execCommand('copy');
+        if (btnCopy) btnCopy.innerHTML = '✅ Link Tersalin!';
+        setTimeout(() => { if (btnCopy) btnCopy.innerHTML = '<span>📋</span> Salin Link'; }, 2000);
+      });
     }
-    genUnitSelect.innerHTML = html;
-  }
-
-  // Penyesuaian form dinamis berdasarkan modul yang dipilih
-  window.updateGeneratorForm = function() {
-    if (!genModSelect || !genBookSelect) return;
-    const selectedMod = genModSelect.value;
-    const bookVal = genBookSelect.value;
-
-    if (selectedMod === 'stroke') {
-      // Modul 1: Guratan
-      if (genBookGroup) genBookGroup.style.display = 'block';
-      if (genUnitGroup) genUnitGroup.style.display = 'block';
-      if (genTargetGroup) genTargetGroup.style.display = 'block';
-      if (genTargetLabel) genTargetLabel.textContent = '4. Target Repetisi Tulis:';
-      if (genTargetSelect) {
-        genTargetSelect.innerHTML = `
-          <option value="3" selected>3 Kali Tulis (Standard)</option>
-          <option value="4">4 Kali Tulis (Tantangan)</option>
-          <option value="5">5 Kali Tulis (Master Dino)</option>
-        `;
-      }
-      updateGeneratorUnitOptions(bookVal);
-      if (genTaskName && (!genTaskName.value || genTaskName.value.startsWith('Tugas') || genTaskName.value.startsWith('Kuis') || genTaskName.value.startsWith('PR'))) {
-        const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bookVal]) || {};
-        const uName = unitTitlesMap[genUnitSelect ? genUnitSelect.value : 1] || '';
-        genTaskName.value = `PR Han Yu ${bookVal} Unit ${genUnitSelect ? genUnitSelect.value : '1'}${uName ? ' (' + uName + ')' : ''}`;
-      }
-    } else if (selectedMod === 'match') {
-      // Modul 2: Game Cocok Gambar
-      if (genBookGroup) genBookGroup.style.display = 'block';
-      if (genUnitGroup) genUnitGroup.style.display = 'none';
-      if (genTargetGroup) genTargetGroup.style.display = 'block';
-      if (genTargetLabel) genTargetLabel.textContent = '4. Jumlah Pasangan Kartu:';
-      if (genTargetSelect) {
-        genTargetSelect.innerHTML = `
-          <option value="4">Bayi Dino (4 Pasang)</option>
-          <option value="6" selected>Pemburu Fosil (6 Pasang)</option>
-          <option value="8">Raja Rimba (8 Pasang)</option>
-        `;
-      }
-      if (genTaskName && (!genTaskName.value || genTaskName.value.startsWith('PR') || genTaskName.value.startsWith('Kuis'))) {
-        genTaskName.value = `Tugas Game Cocokkan Han Yu ${bookVal}`;
-      }
-    } else if (selectedMod === 'quiz') {
-      // Modul 3: Kuis Guratan & Kosakata
-      if (genBookGroup) genBookGroup.style.display = 'none';
-      if (genUnitGroup) genUnitGroup.style.display = 'none';
-      if (genTargetGroup) genTargetGroup.style.display = 'block';
-      if (genTargetLabel) genTargetLabel.textContent = '4. Kategori Kuis:';
-      if (genTargetSelect) {
-        genTargetSelect.innerHTML = `
-          <option value="stroke-only" selected>✍️ Khusus Jumlah Guratan (1, 3, 4, 5, 6, 7, 11)</option>
-          <option value="book-1">📖 Han Yu 1 (Dasar & Angka 1-10)</option>
-          <option value="book-2">📖 Han Yu 2 (Dinosaurus & Tubuh)</option>
-          <option value="book-3-12">📚 Han Yu 3 s/d 12 (Tingkat Lanjut)</option>
-          <option value="all">🌟 Semua Soal Campuran</option>
-        `;
-      }
-      if (genTaskName) genTaskName.value = `Kuis Jumlah Guratan & Kosakata Han Yu`;
-    }
-
-    generateLiveUrl();
   };
 
-  function generateLiveUrl() {
-    if (!genLinkOutput || !genModSelect) return;
+  window.shareTeacherTaskWA = function() {
+    const linkOutput = document.getElementById('gen-link-output');
+    const taskInput = document.getElementById('gen-task-name');
+    const taskName = (taskInput ? taskInput.value.trim() : '') || 'Tugas Bahasa Mandarin';
+    const link = linkOutput ? linkOutput.value : window.location.href;
+    const message = `🦖 *DINO MANDARIN ADVENTURE - TUGAS SISWA*\n\n` +
+                    `Halo semuanya! Silakan buka tautan berikut untuk mengerjakan:\n` +
+                    `📌 *${taskName}*\n\n` +
+                    `🔗 *Link Latihan:* ${link}\n\n` +
+                    `Selamat belajar dan kumpulkan telur dinosaurusnya! 🦕✨`;
+    
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, '_blank');
+  };
 
-    const baseUrl = window.location.href.split('?')[0];
-    const mod = genModSelect.value;
-    const book = genBookSelect ? genBookSelect.value : '1';
-    const unit = genUnitSelect ? genUnitSelect.value : '1';
-    const target = genTargetSelect ? genTargetSelect.value : '3';
-    const taskTitle = encodeURIComponent((genTaskName ? genTaskName.value.trim() : '') || 'Tugas Siswa');
-
-    let query = `?mod=${mod}&task=${taskTitle}`;
-
-    if (mod === 'stroke') {
-      query += `&book=${book}&unit=${unit}&reps=${target}`;
-    } else if (mod === 'match') {
-      query += `&book=${book}&pairs=${target}`;
-    } else if (mod === 'quiz') {
-      query += `&qmode=${target}`;
+  window.testTeacherTaskLink = function() {
+    const linkOutput = document.getElementById('gen-link-output');
+    if (linkOutput && linkOutput.value && !linkOutput.value.includes('...')) {
+      window.closeTeacherLinkModal();
+      window.location.href = linkOutput.value;
     }
-
-    const fullUrl = baseUrl + query;
-    genLinkOutput.value = fullUrl;
-  }
+  };
 
   // Event Listeners Generator
-  if (genModSelect) genModSelect.addEventListener('change', window.updateGeneratorForm);
-  if (genBookSelect) genBookSelect.addEventListener('change', () => {
-    updateGeneratorUnitOptions(genBookSelect.value);
-    if (genModSelect.value === 'stroke') {
-      const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[genBookSelect.value]) || {};
-      const uName = unitTitlesMap[genUnitSelect ? genUnitSelect.value : 1] || '';
-      if (genTaskName) genTaskName.value = `PR Han Yu ${genBookSelect.value} Unit ${genUnitSelect ? genUnitSelect.value : '1'}${uName ? ' (' + uName + ')' : ''}`;
-    } else if (genModSelect.value === 'match') {
-      if (genTaskName) genTaskName.value = `Tugas Game Cocokkan Han Yu ${genBookSelect.value}`;
-    }
-    generateLiveUrl();
-  });
-  if (genUnitSelect) genUnitSelect.addEventListener('change', () => {
-    if (genModSelect.value === 'stroke') {
-      const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[genBookSelect ? genBookSelect.value : 1]) || {};
-      const uName = unitTitlesMap[genUnitSelect.value] || '';
-      if (genTaskName) genTaskName.value = `PR Han Yu ${genBookSelect ? genBookSelect.value : '1'} Unit ${genUnitSelect.value}${uName ? ' (' + uName + ')' : ''}`;
-    }
-    generateLiveUrl();
-  });
-  if (genTargetSelect) genTargetSelect.addEventListener('change', generateLiveUrl);
-  if (genTaskName) genTaskName.addEventListener('input', generateLiveUrl);
+  const btnOpenModal = document.getElementById('btn-open-link-generator');
+  const btnCloseModal = document.getElementById('btn-close-link-modal');
+  const modalLink = document.getElementById('teacher-link-modal');
+
+  if (btnOpenModal) btnOpenModal.addEventListener('click', (e) => { e.preventDefault(); window.openTeacherLinkModal(); });
+  if (btnCloseModal) btnCloseModal.addEventListener('click', (e) => { e.preventDefault(); window.closeTeacherLinkModal(); });
+  if (modalLink) modalLink.addEventListener('click', (e) => { if (e.target === modalLink) window.closeTeacherLinkModal(); });
+
+  const btnCopyLink = document.getElementById('btn-copy-gen-link');
+  const btnShareWA = document.getElementById('btn-share-whatsapp');
+  const btnTestLink = document.getElementById('btn-test-gen-link');
+
+  if (btnCopyLink) btnCopyLink.addEventListener('click', window.copyTeacherTaskLink);
+  if (btnShareWA) btnShareWA.addEventListener('click', window.shareTeacherTaskWA);
+  if (btnTestLink) btnTestLink.addEventListener('click', window.testTeacherTaskLink);
 
   // Salin Link ke Clipboard
   if (btnCopyLink) {
@@ -5388,6 +5381,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 </body>
 </html>
+
 
 
 
