@@ -2361,6 +2361,18 @@
         <input type="text" id="gen-task-name" class="form-input-wide" placeholder="Contoh: PR Han Yu 1 Unit 2 - Kelas 2A" value="PR Han Yu 1 Unit 1 (Angka 1-10)" oninput="window.refreshTeacherTaskLink(false)">
       </div>
 
+      <!-- Tombol Utama: BUAT LINK TUGAS SEKARANG -->
+      <div style="margin: 18px 0 12px 0;">
+        <button class="dino-btn primary-btn" id="btn-generate-now" onclick="window.refreshTeacherTaskLink(false); document.getElementById('gen-success-badge').style.display='block'; if(window.dinoAudio) window.dinoAudio.playSfx('correct');" style="width: 100%; font-size: 1.15rem; padding: 14px; background: linear-gradient(135deg, #2e7d32, #1b5e20); color: white; border-radius: var(--radius-md); box-shadow: 0 4px 16px rgba(46,125,50,0.35); font-weight: 700; cursor: pointer;">
+          ✨ BUAT LINK TUGAS SEKARANG ✨
+        </button>
+      </div>
+
+      <!-- Notifikasi Sukses -->
+      <div id="gen-success-badge" style="display: none; background: #e8f5e9; border: 1.5px solid #4caf50; border-radius: 12px; padding: 10px 14px; color: #1b5e20; font-size: 0.92rem; font-weight: 600; text-align: center; margin-bottom: 12px;">
+        🎉 Link Tugas Berhasil Dibuat! Silakan klik <strong>Salin Link</strong> atau <strong>Kirim ke WA</strong> di bawah:
+      </div>
+
       <!-- Kotak Link yang Dihasilkan -->
       <div class="generated-link-box">
         <div style="font-size: 0.88rem; font-weight: 700; color: #1b5e20; margin-bottom: 6px;">
@@ -5381,6 +5393,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 </body>
 </html>
+
 
 
 
