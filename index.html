@@ -5276,82 +5276,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   // 4. FITUR PEMBUAT LINK TUGAS BERTAHAP (TEACHER LINK GENERATOR)
   // ==========================================================================
-  window.refreshTeacherTaskLink = function(isBookChanged) {
-    const modSel = document.getElementById('gen-module-select');
-    const bookSel = document.getElementById('gen-book-select');
-    const unitSel = document.getElementById('gen-unit-select');
-    const targetSel = document.getElementById('gen-target-select');
-    const taskInput = document.getElementById('gen-task-name');
-    const linkOutput = document.getElementById('gen-link-output');
-    const bookGrp = document.getElementById('gen-book-group');
-    const unitGrp = document.getElementById('gen-unit-group');
-    const targetGrp = document.getElementById('gen-target-group');
-    const targetLbl = document.getElementById('gen-target-label');
-
-    if (!modSel || !linkOutput) return;
-
-    const mod = modSel.value || 'stroke';
-    const book = (bookSel ? bookSel.value : '1') || '1';
-
-    // Rebuild unit dropdown dynamically if book changed or options lack detail
-    if (unitSel && (isBookChanged || unitSel.options.length <= 1 || !unitSel.options[0].text.includes('('))) {
-      const bId = parseInt(book) || 1;
-      const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
-      const curVal = unitSel.value || '1';
-      let html = '';
-      for (let u = 1; u <= 10; u++) {
-        const title = unitTitlesMap[u] || `Unit ${u}`;
-        html += `<option value="${u}" ${u == curVal ? 'selected' : ''}>Unit ${u} (${title})</option>`;
-      }
-      unitSel.innerHTML = html;
-    }
-
-    const unit = (unitSel ? unitSel.value : '1') || '1';
-    const target = (targetSel ? targetSel.value : '3') || '3';
-
-    if (mod === 'stroke') {
-      if (bookGrp) bookGrp.style.display = 'block';
-      if (unitGrp) unitGrp.style.display = 'block';
-      if (targetGrp) targetGrp.style.display = 'block';
-      if (targetLbl) targetLbl.textContent = '4. Target Repetisi Tulis:';
-      if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.startsWith('PR') || taskInput.value.startsWith('Tugas') || taskInput.value.startsWith('Kuis'))) {
-        const bId = parseInt(book) || 1;
-        const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
-        const uName = unitTitlesMap[unit] || '';
-        taskInput.value = `PR Han Yu ${book} Unit ${unit}${uName ? ' (' + uName + ')' : ''}`;
-      }
-    } else if (mod === 'match') {
-      if (bookGrp) bookGrp.style.display = 'block';
-      if (unitGrp) unitGrp.style.display = 'none';
-      if (targetGrp) targetGrp.style.display = 'block';
-      if (targetLbl) targetLbl.textContent = '4. Jumlah Pasangan Kartu:';
-      if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.startsWith('PR') || taskInput.value.startsWith('Tugas') || taskInput.value.startsWith('Kuis'))) {
-        taskInput.value = `Tugas Game Cocokkan Han Yu ${book}`;
-      }
-    } else if (mod === 'quiz') {
-      if (bookGrp) bookGrp.style.display = 'none';
-      if (unitGrp) unitGrp.style.display = 'none';
-      if (targetGrp) targetGrp.style.display = 'block';
-      if (targetLbl) targetLbl.textContent = '4. Kategori Kuis:';
-      if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.startsWith('PR') || taskInput.value.startsWith('Tugas') || taskInput.value.startsWith('Kuis'))) {
-        taskInput.value = `Kuis Jumlah Guratan & Kosakata Han Yu`;
-      }
-    }
-
-    const taskTitle = encodeURIComponent((taskInput ? taskInput.value.trim() : '') || 'Tugas Siswa');
-    const baseUrl = window.location.href.split('?')[0];
-
-    let query = `?mod=${mod}&task=${taskTitle}`;
-    if (mod === 'stroke') {
-      query += `&book=${book}&unit=${unit}&reps=${target}`;
-    } else if (mod === 'match') {
-      query += `&book=${book}&pairs=${target}`;
-    } else if (mod === 'quiz') {
-      query += `&qmode=${target}`;
-    }
-
-    linkOutput.value = baseUrl + query;
-  };
+  // (Fungsi window.refreshTeacherTaskLink & window.openTeacherLinkModal didefinisikan secara global di head)
 
   // Alias
   window.updateGeneratorForm = window.refreshTeacherTaskLink;
@@ -5586,6 +5511,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 </body>
 </html>
+
 
 
 
