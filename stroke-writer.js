@@ -547,30 +547,8 @@ class DinoStrokeWriter {
         showCharacter: false,
         strokeFadeDuration: 400,
         highlightColor: '#FFB300',
-        charDataLoader: (char, onComplete) => {
-          fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${char}.json`)
-            .then(res => {
-              if (!res.ok) throw new Error('Network error');
-              return res.json();
-            })
-            .then(charData => onComplete(charData))
-            .catch(() => {
-              // Fallback jika offline / CDN terkendala
-              this.targetContainer.innerHTML = `
-                <div class="fallback-char-wrap">
-                  <div class="fallback-char-big">${char}</div>
-                  <div class="fallback-char-note">Pratinjau Font Standar</div>
-                </div>
-              `;
-            });
-        },
         onLoadCharDataError: () => {
-          this.targetContainer.innerHTML = `
-            <div class="fallback-char-wrap">
-              <div class="fallback-char-big">${this.currentChar}</div>
-              <div class="fallback-char-note">Pratinjau Font Standar</div>
-            </div>
-          `;
+          this.renderInteractiveCanvasFallback(size);
         }
       });
 
@@ -581,7 +559,69 @@ class DinoStrokeWriter {
       }
     } catch (err) {
       console.warn('HanziWriter init warning:', err);
+      this.renderInteractiveCanvasFallback(size);
     }
+  }
+
+  renderInteractiveCanvasFallback(size) {
+    if (!this.targetContainer) return;
+    this.targetContainer.innerHTML = `
+      <div style="position: relative; width: ${size}px; height: ${size}px; margin: 0 auto; user-select: none;">
+        <div style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size: ${size * 0.65}px; color: #cfd8dc; font-family: 'Noto Sans SC', sans-serif; pointer-events: none;">
+          ${this.currentChar}
+        </div>
+        <canvas id="fallback-draw-canvas" width="${size}" height="${size}" style="position: absolute; top:0; left:0; width:100%; height:100%; cursor: crosshair; touch-action: none;"></canvas>
+      </div>
+    `;
+
+    const canvas = document.getElementById('fallback-draw-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let strokePoints = 0;
+
+    const startDraw = (e) => {
+      isDrawing = true;
+      strokePoints = 0;
+      ctx.beginPath();
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+      const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+      ctx.moveTo(x, y);
+    };
+
+    const draw = (e) => {
+      if (!isDrawing) return;
+      strokePoints++;
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+      const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+      ctx.lineWidth = 14;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#1B5E20';
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    };
+
+    const stopDraw = () => {
+      if (!isDrawing) return;
+      isDrawing = false;
+      if (strokePoints > 8) {
+        this.handleRepetitionComplete();
+        setTimeout(() => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }, 600);
+      }
+    };
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stopDraw);
+
+    canvas.addEventListener('touchstart', startDraw);
+    canvas.addEventListener('touchmove', draw);
+    window.addEventListener('touchend', stopDraw);
   }
 
   startQuiz() {

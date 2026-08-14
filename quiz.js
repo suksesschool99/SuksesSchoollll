@@ -86,16 +86,21 @@ class DinoQuiz {
   }
 
   startQuiz() {
-    let pool = [...window.DINO_DATA.strokeQuizQuestions];
+    let pool = [...(window.DINO_DATA && (window.DINO_DATA.strokeCountQuestions || window.DINO_DATA.strokeQuizQuestions) || [])];
 
     if (this.filterType === 'stroke-only') {
-      pool = pool.filter(q => q.type === 'stroke-count' || q.type === 'stroke-find-char');
+      pool = pool.filter(q => q.type === 'stroke-count' || q.type === 'count-stroke' || q.type === 'stroke-find-char');
     } else if (this.filterType === 'book-1') {
       pool = pool.filter(q => q.book === 1);
     } else if (this.filterType === 'book-2') {
       pool = pool.filter(q => q.book === 2);
     } else if (this.filterType === 'book-3-12') {
       pool = pool.filter(q => q.book >= 3);
+    }
+
+    // Fallback jika pool kosong
+    if (pool.length === 0 && window.DINO_DATA && window.DINO_DATA.strokeCountQuestions) {
+      pool = [...window.DINO_DATA.strokeCountQuestions];
     }
 
     // Acak urutan pertanyaan

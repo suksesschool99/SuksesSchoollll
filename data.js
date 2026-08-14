@@ -929,6 +929,9 @@ const DINO_DATA = {
   ]
 };
 
+// Alias strokeQuizQuestions
+DINO_DATA.strokeQuizQuestions = DINO_DATA.strokeCountQuestions;
+
 // Pastikan data tersedia secara global di window
 if (typeof window !== 'undefined') {
   window.DINO_DATA = DINO_DATA;
