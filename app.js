@@ -140,6 +140,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function updateGeneratorUnitOptions(bookId) {
+    if (!genUnitSelect) return;
+    const bId = parseInt(bookId) || 1;
+    const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
+    
+    let html = '';
+    for (let u = 1; u <= 10; u++) {
+      const title = unitTitlesMap[u] || `Unit ${u}`;
+      html += `<option value="${u}">Unit ${u} (${title})</option>`;
+    }
+    genUnitSelect.innerHTML = html;
+  }
+
   // Penyesuaian form dinamis berdasarkan modul yang dipilih
   window.updateGeneratorForm = function() {
     if (!genModSelect || !genBookSelect) return;
@@ -159,8 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
           <option value="5">5 Kali Tulis (Master Dino)</option>
         `;
       }
-      if (genTaskName && (!genTaskName.value || genTaskName.value.startsWith('Tugas') || genTaskName.value.startsWith('Kuis'))) {
-        genTaskName.value = `PR Han Yu ${bookVal} Unit ${genUnitSelect ? genUnitSelect.value : '1'} - Menulis Guratan`;
+      updateGeneratorUnitOptions(bookVal);
+      if (genTaskName && (!genTaskName.value || genTaskName.value.startsWith('Tugas') || genTaskName.value.startsWith('Kuis') || genTaskName.value.startsWith('PR'))) {
+        const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bookVal]) || {};
+        const uName = unitTitlesMap[genUnitSelect ? genUnitSelect.value : 1] || '';
+        genTaskName.value = `PR Han Yu ${bookVal} Unit ${genUnitSelect ? genUnitSelect.value : '1'}${uName ? ' (' + uName + ')' : ''}`;
       }
     } else if (selectedMod === 'match') {
       // Modul 2: Game Cocok Gambar
@@ -226,8 +242,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Event Listeners Generator
   if (genModSelect) genModSelect.addEventListener('change', window.updateGeneratorForm);
   if (genBookSelect) genBookSelect.addEventListener('change', () => {
+    updateGeneratorUnitOptions(genBookSelect.value);
     if (genModSelect.value === 'stroke') {
-      if (genTaskName) genTaskName.value = `PR Han Yu ${genBookSelect.value} Unit ${genUnitSelect ? genUnitSelect.value : '1'} - Menulis Guratan`;
+      const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[genBookSelect.value]) || {};
+      const uName = unitTitlesMap[genUnitSelect ? genUnitSelect.value : 1] || '';
+      if (genTaskName) genTaskName.value = `PR Han Yu ${genBookSelect.value} Unit ${genUnitSelect ? genUnitSelect.value : '1'}${uName ? ' (' + uName + ')' : ''}`;
     } else if (genModSelect.value === 'match') {
       if (genTaskName) genTaskName.value = `Tugas Game Cocokkan Han Yu ${genBookSelect.value}`;
     }
@@ -235,7 +254,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   if (genUnitSelect) genUnitSelect.addEventListener('change', () => {
     if (genModSelect.value === 'stroke') {
-      if (genTaskName) genTaskName.value = `PR Han Yu ${genBookSelect ? genBookSelect.value : '1'} Unit ${genUnitSelect.value} - Menulis Guratan`;
+      const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[genBookSelect ? genBookSelect.value : 1]) || {};
+      const uName = unitTitlesMap[genUnitSelect.value] || '';
+      if (genTaskName) genTaskName.value = `PR Han Yu ${genBookSelect ? genBookSelect.value : '1'} Unit ${genUnitSelect.value}${uName ? ' (' + uName + ')' : ''}`;
     }
     generateLiveUrl();
   });

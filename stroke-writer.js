@@ -89,17 +89,21 @@ class DinoStrokeWriter {
       return;
     }
 
-    const vocabInBook = window.DINO_DATA.vocabList.filter(v => v.book === parseInt(bookId));
-    const units = [...new Set(vocabInBook.map(v => v.unit))].sort((a, b) => a - b);
+    const bId = parseInt(bookId) || 1;
+    const vocabInBook = window.DINO_DATA.vocabList.filter(v => v.book === bId);
+    let units = [...new Set(vocabInBook.map(v => v.unit))].sort((a, b) => a - b);
 
     if (units.length === 0) {
-      this.unitSelector.innerHTML = `<option value="1">Unit 1</option>`;
-      return;
+      units = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     }
 
+    const unitTitlesMap = (window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
+
     this.unitSelector.innerHTML = units.map(u => {
+      const theme = unitTitlesMap[u] || `Pelajaran ${u}`;
       const count = vocabInBook.filter(v => v.unit === u).length;
-      return `<option value="${u}">Unit ${u} (${count} Kata)</option>`;
+      const countText = count > 0 ? ` (${count} Kata)` : '';
+      return `<option value="${u}">Unit ${u} (${theme}${countText})</option>`;
     }).join('');
   }
 

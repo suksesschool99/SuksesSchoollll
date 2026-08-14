@@ -21,6 +21,154 @@ const DINO_DATA = {
     { id: 12, title: 'Han Yu 12 (汉语 第十二册)', desc: 'Aplikasi Bahasa Lanjutan, Pidato, Penulisan Esai & Wawasan Global' }
   ],
 
+  // Metadata Judul Topik Unit Buku Han Yu 1 s/d Han Yu 12
+  unitTitles: {
+    1: {
+      1: 'Angka 1-10',
+      2: 'Alam & Tubuh Dasar',
+      3: 'Sapaan & Ganti',
+      4: 'Keluarga',
+      5: 'Ukuran & Satuan',
+      6: 'Arah & Posisi',
+      7: 'Cuaca & Alam',
+      8: 'Benda Kelas & Rumah',
+      9: 'Makanan & Minuman',
+      10: 'Gerakan & Aktivitas'
+    },
+    2: {
+      1: 'Waktu & Sekolah',
+      2: 'Identitas Diri',
+      3: 'Usia & Kelas',
+      4: 'Anggota Tubuh',
+      5: 'Pakaian & Warna',
+      6: 'Hewan & Dinosaurus',
+      7: 'Buah & Sayuran',
+      8: 'Hari & Tempat',
+      9: 'Aktivitas Sehari-hari',
+      10: 'Transportasi & Liburan'
+    },
+    3: {
+      1: 'Teman & Kelas',
+      2: 'Alat Tulis & Ruangan',
+      3: 'Jam & Waktu',
+      4: 'Rumah & Kamar Tidur',
+      5: 'Kebun Binatang',
+      6: 'Profesi & Pekerjaan',
+      7: 'Belanja & Uang',
+      8: 'Cuaca & Suhu',
+      9: 'Hobi & Musik',
+      10: 'Restoran & Menu'
+    },
+    4: {
+      1: 'Olahraga & Bola',
+      2: 'Transportasi Kota',
+      3: 'Empat Musim',
+      4: 'Supermarket & Buah',
+      5: 'Kesehatan & Rumah Sakit',
+      6: 'Ulang Tahun & Hadiah',
+      7: 'Wisata & Liburan',
+      8: 'Lingkungan Alam',
+      9: 'Surat & Komunikasi',
+      10: 'Hewan Peliharaan'
+    },
+    5: {
+      1: 'Kesenian & Bakat',
+      2: 'Alat Elektronik',
+      3: 'Penghijauan & Pohon',
+      4: 'Festival Tradisional',
+      5: 'Cerita Dongeng',
+      6: 'Memasak & Dapur',
+      7: 'Museum & Sejarah',
+      8: 'Sahabat Pena',
+      9: 'Tata Krama & Sopan',
+      10: 'Rencana & Cita-cita'
+    },
+    6: {
+      1: 'Teknologi & Internet',
+      2: 'Tembok Besar & Kota',
+      3: 'Festival Perahu Naga',
+      4: 'Antariksa & Roket',
+      5: 'Fabel & Hikmah',
+      6: 'Kerajinan Kertas & Seni',
+      7: 'Kesehatan & Sanitasi',
+      8: 'Ekspedisi Geografi',
+      9: 'Profesi Masa Kini',
+      10: 'Perjuangan & Sukses'
+    },
+    7: {
+      1: 'Cerita Idiom Chengyu',
+      2: 'Asal Usul Hanzi',
+      3: 'Budaya Kuliner & Teh',
+      4: 'Arsitektur Tradisional',
+      5: 'Jalur Sutra Kuno',
+      6: 'Puisi Klasik Tang',
+      7: 'Alat Musik Tradisional',
+      8: 'Bambu & Filosofi',
+      9: 'Keluarga & Budi Pekerti',
+      10: 'Persahabatan Sejati'
+    },
+    8: {
+      1: 'Sungai Yangtze & Kuning',
+      2: '4 Penemuan Kuno Besar',
+      3: 'Pengobatan Herbal TCM',
+      4: 'Tahun Baru Imlek',
+      5: 'Legenda & Mitologi',
+      6: 'Tokoh Pahlawan Sejarah',
+      7: 'Keramik & Porselen',
+      8: 'Seni Bela Diri Wushu',
+      9: 'Astronomi Kuno',
+      10: 'Warisan Dunia UNESCO'
+    },
+    9: {
+      1: 'Seni Kaligrafi Shufa',
+      2: 'Opera Klasik Beijing',
+      3: '4 Karya Sastra Utama',
+      4: 'Lukisan Alam Shan Shui',
+      5: 'Taman Klasik Suzhou',
+      6: 'Sutra & Sulaman Indah',
+      7: 'Filosofi Yin Yang',
+      8: 'Petuah Bijak Kehidupan',
+      9: 'Pesta Tradisi Budaya',
+      10: 'Konservasi Fauna Langka'
+    },
+    10: {
+      1: 'Ekonomi & Pasar Modern',
+      2: 'Peduli Bumi Rendah Karbon',
+      3: 'Pertukaran Antarbudaya',
+      4: 'Energi Bersih Terbarukan',
+      5: 'Kereta Cepat & Rel',
+      6: 'Tata Kota Ramah Lingkungan',
+      7: 'Keanekaragaman Hayati',
+      8: 'Teknologi Digital & AI',
+      9: 'Kerja Sama Internasional',
+      10: 'Pembangunan Berkelanjutan'
+    },
+    11: {
+      1: 'Filsafat Konfusius & Moral',
+      2: 'Inovasi Sains Terdepan',
+      3: 'Eksplorasi Laut & Kutub',
+      4: 'Media & Komunikasi Digital',
+      5: 'Hubungan Diplomatik',
+      6: 'Karakter & Ketangguhan',
+      7: 'Manajemen & Produktivitas',
+      8: 'Sastra & Puisi Kontemporer',
+      9: 'Wawasan Finansial Mandiri',
+      10: 'Kepemimpinan Masa Depan'
+    },
+    12: {
+      1: 'Seni Pidato & Retorika',
+      2: 'Penulisan Esai & Analisis',
+      3: 'Wawasan Warga Global',
+      4: 'Strategi Negosiasi Unggul',
+      5: 'Apresiasi Seni & Estetika',
+      6: 'Etika Digital & Privasi',
+      7: 'Studi Kasus Bisnis Kreatif',
+      8: 'Mitigasi Iklim Global',
+      9: 'Inovasi Pendidikan Modern',
+      10: 'Visi Generasi Emas'
+    }
+  },
+
   // Daftar Kosakata Lengkap Terstruktur Per Buku & Per Unit (Han Yu 1 - 12)
   vocabList: [
     // =========================================================================
