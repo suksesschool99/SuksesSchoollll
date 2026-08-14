@@ -293,12 +293,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   // 5. PARSER LINK TUGAS SISWA OTOMATIS (ON PAGE LOAD)
   // ==========================================================================
+  // 5. PARSER LINK TUGAS SISWA OTOMATIS (ON PAGE LOAD) - KHUSUS MURID SD KELAS 2-3
+  // ==========================================================================
   function parseStudentTaskUrl() {
     const params = new URLSearchParams(window.location.search);
     const mod = params.get('mod') || params.get('module');
     if (!mod) return; // Mode normal jika tanpa parameter
 
-    const taskTitle = params.get('task') || params.get('title') || 'Tugas Mandiri';
+    // Aktifkan Mode Khusus Murid (Kids Focus Mode)
+    document.body.classList.add('student-mode');
+
+    const brandSub = document.querySelector('.brand-sub-title');
+    if (brandSub) {
+      brandSub.textContent = '🎒 Mode Latihan Khusus Siswa SD Kelas 2-3 🌿';
+    }
+
+    const taskTitle = decodeURIComponent(params.get('task') || params.get('title') || 'Tugas Mandiri Han Yu');
     const book = parseInt(params.get('book')) || 1;
     const unit = parseInt(params.get('unit')) || 1;
     const reps = parseInt(params.get('reps')) || 3;
@@ -313,7 +323,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (banner) banner.style.display = 'block';
     if (bannerTitle) bannerTitle.textContent = taskTitle;
 
+    // Set judul di sertifikat
+    const certTitle = document.getElementById('cert-task-title');
+    if (certTitle) certTitle.textContent = taskTitle;
+
     if (btnDismissTask) {
+      btnDismissTask.innerHTML = 'Mulai Belajar 🦖';
       btnDismissTask.addEventListener('click', () => {
         banner.style.display = 'none';
       });
@@ -321,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (mod === 'stroke') {
       switchTab('module-stroke');
-      if (bannerDesc) bannerDesc.textContent = `• Han Yu ${book} Unit ${unit} (Target: ${reps}x Tulis Telur Dino)`;
+      if (bannerDesc) bannerDesc.textContent = `• Han Yu ${book} Unit ${unit} (Target: Tulis Setiap Karakter ${reps}x Sampai Menetas 🥚➔🦖)`;
 
       // Set Dropdowns Modul 1
       const bookSel = document.getElementById('stroke-book-select');
@@ -341,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else if (mod === 'match') {
       switchTab('module-match');
-      if (bannerDesc) bannerDesc.textContent = `• Game Mencocokkan Han Yu ${book} (${pairs} Pasang Kartu)`;
+      if (bannerDesc) bannerDesc.textContent = `• Game Mencocokkan Han Yu ${book} (${pairs} Pasang Kartu Dino)`;
 
       const matchBookSel = document.getElementById('match-book-select');
       if (matchBookSel) matchBookSel.value = book;
@@ -350,7 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.matchGameApp) {
           window.matchGameApp.currentBook = book;
           window.matchGameApp.pairsCount = pairs;
-          // Set active button diff
           document.querySelectorAll('.diff-btn').forEach(btn => {
             btn.classList.toggle('active', parseInt(btn.getAttribute('data-pairs')) === pairs);
           });
@@ -360,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else if (mod === 'quiz') {
       switchTab('module-quiz');
-      if (bannerDesc) bannerDesc.textContent = `• Kuis Guratan & Kosakata Mandarin`;
+      if (bannerDesc) bannerDesc.textContent = `• Kuis Jumlah Guratan & Kosakata Han Yu`;
 
       const quizFilterSel = document.getElementById('quiz-filter-select');
       if (quizFilterSel) quizFilterSel.value = qmode;

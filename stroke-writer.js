@@ -415,8 +415,35 @@ class DinoStrokeWriter {
     if (this.currentRepCount >= this.targetReps) {
       // Selesai target repetisi (3-5 kali)!
       this.isCharCompleted = true;
+      if (!this.completedCharsSet) this.completedCharsSet = new Set();
+      this.completedCharsSet.add(this.currentChar);
+
       window.dinoAudio.playSfx('hatch');
       window.dinoAudio.playSfx('fanfare');
+
+      // Cek jika semua karakter dalam unit telah selesai (Mode Tugas Murid)
+      if (this.completedCharsSet.size >= this.unitList.length && this.unitList.length > 0) {
+        setTimeout(() => {
+          const certModal = document.getElementById('student-certificate-modal');
+          const certTitle = document.getElementById('cert-task-title');
+          const certDate = document.getElementById('cert-date-txt');
+          if (certModal) {
+            certModal.classList.add('show');
+            certModal.style.display = 'flex';
+            if (certTitle) {
+              const taskBannerTitle = document.getElementById('task-banner-title');
+              certTitle.textContent = (taskBannerTitle ? taskBannerTitle.textContent : '') || `Han Yu ${this.currentBook} Unit ${this.currentUnit} - Selesai!`;
+            }
+            if (certDate) {
+              const now = new Date();
+              certDate.textContent = `Tanggal Pengerjaan: ${now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+            }
+            if (window.dinoAudio) {
+              window.dinoAudio.playSfx('victory');
+            }
+          }
+        }, 1200);
+      }
 
       if (this.repSuccessBox) {
         this.repSuccessBox.innerHTML = `

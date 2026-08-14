@@ -179,6 +179,99 @@
       transform: translateY(-2px) scale(1.03);
     }
 
+    /* Tampilan Khusus Murid Kelas 2-3 SD (Kids Focus Mode) */
+    body.student-mode #btn-open-link-generator {
+      display: none !important;
+    }
+
+    body.student-mode .nav-tabs-bar {
+      display: none !important;
+    }
+
+    body.student-mode .student-task-banner {
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      border-bottom: 4px solid #2e7d32;
+      padding: 16px 20px;
+      display: block !important;
+    }
+
+    body.student-mode .task-badge-pill {
+      background: #1b5e20;
+      font-size: 0.95rem;
+      padding: 6px 14px;
+    }
+
+    body.student-mode .task-title-text {
+      font-size: 1.25rem;
+      color: #1b5e20;
+    }
+
+    body.student-mode .curriculum-selector-bar {
+      background: #fff8e1;
+      border: 2.5px solid #ffe082;
+    }
+
+    .kids-progress-card {
+      background: white;
+      border: 2.5px solid #81c784;
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .kids-progress-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1b5e20;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kids-progress-bar-wrap {
+      flex: 1;
+      min-width: 180px;
+      height: 18px;
+      background: #e0e0e0;
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .kids-progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4caf50 0%, #81c784 100%);
+      border-radius: var(--radius-pill);
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .cert-badge-dino { font-size: 4.5rem; margin-bottom: 8px; animation: popInDino 0.5s ease-out; }
+    .cert-main-title { font-size: 1.8rem; color: #1b5e20; font-weight: 800; }
+    .cert-stars { font-size: 2.2rem; color: #ff9800; letter-spacing: 4px; margin: 8px 0; }
+    .cert-task-name { font-size: 1.15rem; font-weight: 700; color: #e65100; margin-bottom: 14px; }
+    .cert-student-input-wrap { margin: 16px 0; }
+    .cert-student-input {
+      padding: 10px 18px;
+      border: 2px solid #81c784;
+      border-radius: var(--radius-pill);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1b5e20;
+      text-align: center;
+      outline: none;
+      width: 80%;
+      max-width: 320px;
+      background: #f1f8e9;
+    }
+    .cert-date-txt { font-size: 0.85rem; color: var(--dino-text-muted); margin-top: 4px; }
+
     /* Student Task Assignment Banner */
     .student-task-banner {
       background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
@@ -2291,6 +2384,39 @@
   </div>
 
   <!-- ========================================================================
+       4b. MODAL: Sertifikat Selesai Tugas Murid SD (Kids Completion Certificate)
+       ======================================================================== -->
+  <div class="dino-modal-overlay" id="student-certificate-modal">
+    <div class="dino-modal-box kids-cert-box" style="max-width: 480px;">
+      <div class="cert-badge-dino">🦖🏆✨</div>
+      <h3 class="cert-main-title">SELAMAT! TUGAS SELESAI!</h3>
+      <div class="cert-stars">⭐⭐⭐⭐⭐</div>
+      <div class="cert-task-name" id="cert-task-title">PR Han Yu 1 Unit 1</div>
+      
+      <div class="cert-student-input-wrap">
+        <label for="cert-student-name" style="font-size: 0.9rem; font-weight: 700; color: #5d4037; display: block; margin-bottom: 6px;">
+          Nama Siswa / Murid:
+        </label>
+        <input type="text" id="cert-student-name" class="cert-student-input" placeholder="Ketik Namamu di Sini..." value="">
+        <div class="cert-date-txt" id="cert-date-txt">Tanggal Pengerjaan: Hari Ini</div>
+      </div>
+
+      <div style="background: #f9fbe7; border: 1.5px dashed #c0ca33; border-radius: var(--radius-md); padding: 12px; margin: 16px 0; font-size: 0.92rem; color: #33691e; font-weight: 600;">
+        📸 <strong>Petunjuk:</strong> Screenshot / foto layar sertifikat ini lalu kirimkan ke Guru Mandarin sebagai bukti tugas!
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        <button class="dino-btn primary-btn" onclick="document.getElementById('student-certificate-modal').classList.remove('show'); document.getElementById('student-certificate-modal').style.display='none';" style="font-size: 1.05rem; padding: 10px 24px;">
+          🎉 Selesai & Tutup
+        </button>
+        <button class="dino-btn outline-btn" onclick="location.reload();" style="font-size: 1.05rem; padding: 10px 20px;">
+          🔄 Ulangi Latihan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
        5. Prehistoric Dinosaur Footer
        ======================================================================== -->
   <footer class="dino-footer">
@@ -2311,6 +2437,11 @@
 
   <!-- Embedded Bulletproof Link Generator (Bypass Cache GitHub) -->
   <script>
+    // Langsung aktifkan Mode Murid Kelas 2-3 SD jika membuka link tugas
+    if (window.location.search && (window.location.search.indexOf('mod=') !== -1 || window.location.search.indexOf('task=') !== -1)) {
+      document.body.classList.add('student-mode');
+    }
+
     // Pastikan fungsi selalu tersedia secara global & instan
     window.openTeacherLinkModal = function() {
       var modal = document.getElementById('teacher-link-modal');
