@@ -189,7 +189,13 @@ document.addEventListener('DOMContentLoaded', () => {
       query += `&qmode=${target}`;
     }
 
-    linkOutput.value = baseUrl + query;
+    const fullUrl = baseUrl + query;
+    linkOutput.value = fullUrl;
+
+    const linkHref = document.getElementById('gen-link-href');
+    if (linkHref) {
+      linkHref.href = fullUrl;
+    }
   };
 
   window.openTeacherLinkModal = function() {

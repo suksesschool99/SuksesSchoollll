@@ -2378,6 +2378,12 @@
         <div style="font-size: 0.88rem; font-weight: 700; color: #1b5e20; margin-bottom: 6px;">
           🔗 Link Tugas Siswa Siap Dibagikan:
         </div>
+        
+        <!-- Tautan Langsung yang Bisa Diklik -->
+        <a id="gen-link-href" href="#" target="_blank" style="display: block; background: white; padding: 10px 14px; border-radius: var(--radius-sm); border: 1.5px solid #81c784; color: #0288d1; font-weight: 700; text-decoration: underline; font-size: 0.88rem; margin-bottom: 10px; word-break: break-all;">
+          🌐 Buka Link Tugas di Tab Baru
+        </a>
+
         <input type="text" readonly id="gen-link-output" class="link-preview-input" value="" onclick="this.select()">
 
         <div class="link-actions-grid">
@@ -2397,6 +2403,11 @@
       </div>
     </div>
   </div>
+
+  <!-- Tombol Melayang Cepat: Buka Menu Guru (Selalu Terlihat di Pojok Bawah) -->
+  <button id="floating-teacher-btn" onclick="window.openTeacherLinkModal()" style="position: fixed; bottom: 20px; right: 20px; z-index: 998; background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white; border: 2px solid #81c784; padding: 12px 20px; border-radius: 50px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 6px 20px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit;">
+    <span>🔗</span> Buat Link Tugas
+  </button>
 
   <!-- ========================================================================
        4b. MODAL: Sertifikat Selesai Tugas Murid SD (Kids Completion Certificate)
@@ -5393,6 +5404,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 </body>
 </html>
+
 
 
 
