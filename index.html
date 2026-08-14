@@ -90,6 +90,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
+      flex-wrap: wrap;
     }
 
     .logo-brand {
@@ -131,10 +132,11 @@
       letter-spacing: 0.3px;
     }
 
-    .header-audio-controls {
+    .header-action-controls {
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .audio-toggle-btn {
@@ -162,6 +164,71 @@
       background: rgba(0, 0, 0, 0.25);
       color: #b0bec5;
       border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .teacher-btn {
+      background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+      border-color: #ffe082;
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 3px 8px rgba(230, 81, 0, 0.3);
+    }
+
+    .teacher-btn:hover {
+      background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    /* Student Task Assignment Banner */
+    .student-task-banner {
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      border-bottom: 3px solid #ff9800;
+      padding: 12px 20px;
+      box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+      animation: slideDownBanner 0.4s ease-out;
+    }
+
+    @keyframes slideDownBanner {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .task-banner-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .task-info-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .task-badge-pill {
+      background: #e65100;
+      color: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .task-title-text {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #bf360c;
+    }
+
+    .task-target-desc {
+      font-size: 0.9rem;
+      color: #5d4037;
+      font-weight: 600;
     }
 
     /* Tabs Bar */
@@ -351,6 +418,18 @@
     .outline-btn:hover {
       background: var(--dino-green-soft);
       transform: translateY(-2px);
+    }
+
+    .whatsapp-btn {
+      background: #25d366;
+      color: white;
+      box-shadow: 0 4px 0 #128c7e;
+    }
+
+    .whatsapp-btn:hover {
+      background: #2ee672;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #128c7e;
     }
 
     /* Status Badges */
@@ -1402,10 +1481,36 @@
       box-shadow: var(--shadow-lg);
       max-height: 90vh;
       overflow-y: auto;
+      position: relative;
     }
 
-    .modal-dino-hatch { font-size: 4rem; margin-bottom: 12px; }
-    .modal-title { font-size: 1.7rem; color: var(--dino-green-deep); margin-bottom: 8px; font-weight: 700; }
+    .modal-close-x {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: #f5f5f5;
+      border: none;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #78909c;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close-x:hover {
+      background: #ffebee;
+      color: #d32f2f;
+      transform: scale(1.1);
+    }
+
+    .modal-dino-hatch { font-size: 3.8rem; margin-bottom: 8px; }
+    .modal-title { font-size: 1.65rem; color: var(--dino-green-deep); margin-bottom: 8px; font-weight: 700; }
     .modal-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; }
     .summary-stat-card {
       background: var(--dino-green-soft);
@@ -1441,6 +1546,67 @@
     .win-v-pinyin { font-weight: 600; color: var(--dino-amber-deep); }
     .win-v-meaning { color: var(--dino-text-dark); }
     .win-v-audio { background: none; border: none; cursor: pointer; font-size: 1rem; }
+
+    /* Teacher Generator Form */
+    .teacher-form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .form-group-label {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--dino-green-deep);
+      margin-bottom: 6px;
+    }
+
+    .form-select-wide, .form-input-wide {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      border: 2px solid #cfd8dc;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      background: #fafafa;
+      color: var(--dino-text-dark);
+      transition: all 0.2s ease;
+    }
+
+    .form-select-wide:focus, .form-input-wide:focus {
+      border-color: var(--dino-green-main);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+    }
+
+    .generated-link-box {
+      background: #f1f8e9;
+      border: 2px dashed #81c784;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-top: 16px;
+      text-align: left;
+    }
+
+    .link-preview-input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid #a5d6a7;
+      font-size: 0.85rem;
+      background: white;
+      color: #1b5e20;
+      font-family: monospace;
+      outline: none;
+      margin-bottom: 10px;
+    }
+
+    .link-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
 
     .quiz-result-wrapper {
       background: white;
@@ -1520,7 +1686,7 @@
     @media (max-width: 768px) {
       .header-container { flex-direction: column; align-items: stretch; gap: 12px; }
       .logo-brand { justify-content: center; }
-      .header-audio-controls { justify-content: center; }
+      .header-action-controls { justify-content: center; }
       .tabs-container { grid-template-columns: 1fr; gap: 8px; }
       .nav-tab-btn { padding: 10px 14px; font-size: 0.98rem; }
       .module-header-banner { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; }
@@ -1535,6 +1701,7 @@
       .card-text-content .card-hanzi { font-size: 1.7rem; }
       .quiz-options-grid { grid-template-columns: 1fr; }
       .large-hanzi { font-size: 3.5rem; }
+      .link-actions-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -1553,7 +1720,11 @@
         </div>
       </div>
 
-      <div class="header-audio-controls">
+      <div class="header-action-controls">
+        <!-- Tombol Guru: Buat Link Tugas -->
+        <button class="audio-toggle-btn teacher-btn" id="btn-open-link-generator" title="Buat Tautan Tugas Siswa untuk Bab/Unit Tertentu">
+          🔗 Buat Link Tugas
+        </button>
         <button class="audio-toggle-btn" id="btn-toggle-voice" title="Nyalakan/Matikan Suara Pelafalan Mandarin">
           🗣️ Suara Mandarin: ON
         </button>
@@ -1563,6 +1734,22 @@
       </div>
     </div>
   </header>
+
+  <!-- ========================================================================
+       1b. Banner Tugas Siswa (Aktif otomatis saat membuka link tugas)
+       ======================================================================== -->
+  <div class="student-task-banner" id="student-task-banner" style="display: none;">
+    <div class="task-banner-container">
+      <div class="task-info-left">
+        <span class="task-badge-pill">📋 TUGAS SISWA</span>
+        <span class="task-title-text" id="task-banner-title">Latihan Mandiri Han Yu</span>
+        <span class="task-target-desc" id="task-banner-desc">• Han Yu 1 Unit 1</span>
+      </div>
+      <button class="dino-btn primary-btn btn-sm" id="btn-dismiss-task" style="padding: 4px 12px; font-size: 0.82rem;">
+        Mulai Kerjakan ➔
+      </button>
+    </div>
+  </div>
 
   <!-- ========================================================================
        2. Navigation Module Tabs
@@ -2002,7 +2189,109 @@
   </main>
 
   <!-- ========================================================================
-       4. Prehistoric Dinosaur Footer
+       4. MODAL: Pembuat Link Tugas Siswa (Teacher Link Generator)
+       ======================================================================== -->
+  <div class="dino-modal-overlay" id="teacher-link-modal">
+    <div class="dino-modal-box" style="max-width: 580px; text-align: left;">
+      <button class="modal-close-x" id="btn-close-link-modal" title="Tutup Modal">✕</button>
+      
+      <div style="text-align: center; margin-bottom: 18px;">
+        <div style="font-size: 2.8rem; margin-bottom: 4px;">🔗🦖</div>
+        <h3 class="modal-title" style="margin-bottom: 4px;">Buat Link Tugas Bertahap</h3>
+        <p style="font-size: 0.88rem; color: var(--dino-text-muted);">
+          Atur bab, unit, dan modul latihan lalu bagikan link ke siswa atau WhatsApp.
+        </p>
+      </div>
+
+      <!-- Form Generator -->
+      <div class="teacher-form-group">
+        <label for="gen-module-select" class="form-group-label">1. Pilih Jenis Modul Latihan:</label>
+        <select id="gen-module-select" class="form-select-wide">
+          <option value="stroke">✍️ Modul 1: Latihan Menulis Guratan (3-5x)</option>
+          <option value="match">🧩 Modul 2: Game Mencocokkan Kartu Bergambar</option>
+          <option value="quiz">📝 Modul 3: Kuis Jumlah Guratan & Kosakata</option>
+        </select>
+      </div>
+
+      <!-- Konfigurasi Buku Han Yu -->
+      <div class="teacher-form-group" id="gen-book-group">
+        <label for="gen-book-select" class="form-group-label">2. Pilih Buku Han Yu:</label>
+        <select id="gen-book-select" class="form-select-wide">
+          <option value="1">Han Yu 1 (汉语 第一册)</option>
+          <option value="2">Han Yu 2 (汉语 第二册)</option>
+          <option value="3">Han Yu 3 (汉语 第三册)</option>
+          <option value="4">Han Yu 4 (汉语 第四册)</option>
+          <option value="5">Han Yu 5 (汉语 第五册)</option>
+          <option value="6">Han Yu 6 (汉语 第六册)</option>
+          <option value="7">Han Yu 7 (汉语 第七册)</option>
+          <option value="8">Han Yu 8 (汉语 第八册)</option>
+          <option value="9">Han Yu 9 (汉语 第九册)</option>
+          <option value="10">Han Yu 10 (汉语 第十册)</option>
+          <option value="11">Han Yu 11 (汉语 第十一册)</option>
+          <option value="12">Han Yu 12 (汉语 第十二册)</option>
+        </select>
+      </div>
+
+      <!-- Konfigurasi Unit (Khusus Modul 1) -->
+      <div class="teacher-form-group" id="gen-unit-group">
+        <label for="gen-unit-select" class="form-group-label">3. Pilih Unit:</label>
+        <select id="gen-unit-select" class="form-select-wide">
+          <option value="1">Unit 1</option>
+          <option value="2">Unit 2</option>
+          <option value="3">Unit 3</option>
+          <option value="4">Unit 4</option>
+          <option value="5">Unit 5</option>
+          <option value="6">Unit 6</option>
+          <option value="7">Unit 7</option>
+          <option value="8">Unit 8</option>
+          <option value="9">Unit 9</option>
+          <option value="10">Unit 10</option>
+        </select>
+      </div>
+
+      <!-- Konfigurasi Target Repetisi / Tingkat Kesulitan -->
+      <div class="teacher-form-group" id="gen-target-group">
+        <label for="gen-target-select" class="form-group-label" id="gen-target-label">4. Target Repetisi Tulis:</label>
+        <select id="gen-target-select" class="form-select-wide">
+          <option value="3">3 Kali Tulis (Standard)</option>
+          <option value="4">4 Kali Tulis (Tantangan)</option>
+          <option value="5">5 Kali Tulis (Master Dino)</option>
+        </select>
+      </div>
+
+      <!-- Judul / Catatan Tugas -->
+      <div class="teacher-form-group">
+        <label for="gen-task-name" class="form-group-label">5. Nama / Catatan Tugas untuk Siswa:</label>
+        <input type="text" id="gen-task-name" class="form-input-wide" placeholder="Contoh: PR Han Yu 1 Unit 2 - Kelas 2A" value="PR Mandiri Han Yu 1 Unit 1">
+      </div>
+
+      <!-- Kotak Link yang Dihasilkan -->
+      <div class="generated-link-box">
+        <div style="font-size: 0.88rem; font-weight: 700; color: #1b5e20; margin-bottom: 6px;">
+          🔗 Link Tugas Siswa Siap Dibagikan:
+        </div>
+        <input type="text" readonly id="gen-link-output" class="link-preview-input" value="https://...">
+
+        <div class="link-actions-grid">
+          <button class="dino-btn primary-btn" id="btn-copy-gen-link">
+            <span>📋</span> Salin Link
+          </button>
+          <button class="dino-btn whatsapp-btn" id="btn-share-whatsapp">
+            <span>📱</span> Kirim ke WA
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-top: 14px; text-align: center;">
+        <button class="dino-btn outline-btn" id="btn-test-gen-link" style="width: 100%; font-size: 0.95rem;">
+          🧪 Uji Buka Tampilan Tugas Ini Sekarang
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       5. Prehistoric Dinosaur Footer
        ======================================================================== -->
   <footer class="dino-footer">
     <div class="footer-dino-wrap">
