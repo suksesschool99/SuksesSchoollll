@@ -1722,7 +1722,7 @@
 
       <div class="header-action-controls">
         <!-- Tombol Guru: Buat Link Tugas -->
-        <button class="audio-toggle-btn teacher-btn" id="btn-open-link-generator" title="Buat Tautan Tugas Siswa untuk Bab/Unit Tertentu">
+        <button class="audio-toggle-btn teacher-btn" id="btn-open-link-generator" onclick="window.openTeacherLinkModal()" title="Buat Tautan Tugas Siswa untuk Bab/Unit Tertentu">
           🔗 Buat Link Tugas
         </button>
         <button class="audio-toggle-btn" id="btn-toggle-voice" title="Nyalakan/Matikan Suara Pelafalan Mandarin">
@@ -2191,9 +2191,9 @@
   <!-- ========================================================================
        4. MODAL: Pembuat Link Tugas Siswa (Teacher Link Generator)
        ======================================================================== -->
-  <div class="dino-modal-overlay" id="teacher-link-modal">
+  <div class="dino-modal-overlay" id="teacher-link-modal" onclick="if(event.target===this)window.closeTeacherLinkModal()">
     <div class="dino-modal-box" style="max-width: 580px; text-align: left;">
-      <button class="modal-close-x" id="btn-close-link-modal" title="Tutup Modal">✕</button>
+      <button class="modal-close-x" id="btn-close-link-modal" onclick="window.closeTeacherLinkModal()" title="Tutup Modal">✕</button>
       
       <div style="text-align: center; margin-bottom: 18px;">
         <div style="font-size: 2.8rem; margin-bottom: 4px;">🔗🦖</div>

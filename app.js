@@ -3,11 +3,40 @@
  * Navigasi Tab, Audio Controls, Fitur Pembuat Link Tugas Guru, & Parser Tugas Siswa
  */
 
+// Global Function untuk membuka & menutup Modal Link Tugas (Bisa dipanggil via onclick & listener)
+window.openTeacherLinkModal = function() {
+  const modal = document.getElementById('teacher-link-modal');
+  if (modal) {
+    modal.classList.add('show');
+    modal.style.display = 'flex';
+    if (typeof window.updateGeneratorForm === 'function') {
+      window.updateGeneratorForm();
+    }
+    if (window.dinoAudio && typeof window.dinoAudio.playSfx === 'function') {
+      window.dinoAudio.playSfx('pop');
+    }
+  }
+};
+
+window.closeTeacherLinkModal = function() {
+  const modal = document.getElementById('teacher-link-modal');
+  if (modal) {
+    modal.classList.remove('show');
+    modal.style.display = 'none';
+  }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Inisialisasi Modul-Modul Utama Aplikasi
-  window.strokeWriterApp = new DinoStrokeWriter();
-  window.matchGameApp = new DinoMatchGame();
-  window.quizApp = new DinoQuiz();
+  if (typeof DinoStrokeWriter !== 'undefined') {
+    window.strokeWriterApp = new DinoStrokeWriter();
+  }
+  if (typeof DinoMatchGame !== 'undefined') {
+    window.matchGameApp = new DinoMatchGame();
+  }
+  if (typeof DinoQuiz !== 'undefined') {
+    window.quizApp = new DinoQuiz();
+  }
 
   // 2. Tab Switching Logic
   const navTabs = document.querySelectorAll('.nav-tab-btn');
@@ -34,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tab.addEventListener('click', () => {
       const targetModule = tab.getAttribute('data-target');
       switchTab(targetModule);
-      window.dinoAudio.playSfx('pop');
+      if (window.dinoAudio) window.dinoAudio.playSfx('pop');
     });
   });
 
@@ -44,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnToggleSfx) {
     btnToggleSfx.addEventListener('click', () => {
+      if (!window.dinoAudio) return;
       const isEnabled = window.dinoAudio.toggleSfx();
       btnToggleSfx.classList.toggle('muted', !isEnabled);
       btnToggleSfx.innerHTML = isEnabled ? '🔊 Efek Suara: ON' : '🔇 Efek Suara: OFF';
@@ -53,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnToggleVoice) {
     btnToggleVoice.addEventListener('click', () => {
+      if (!window.dinoAudio) return;
       const isEnabled = window.dinoAudio.toggleVoice();
       btnToggleVoice.classList.toggle('muted', !isEnabled);
       btnToggleVoice.innerHTML = isEnabled ? '🗣️ Suara Mandarin: ON' : '🤐 Suara Mandarin: OFF';
@@ -62,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Touch & Click sound wake-up for Web Audio API
   document.body.addEventListener('click', () => {
-    window.dinoAudio.ensureAudioContext();
+    if (window.dinoAudio) window.dinoAudio.ensureAudioContext();
   }, { once: true });
 
   // ==========================================================================
@@ -88,88 +119,95 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnShareWA = document.getElementById('btn-share-whatsapp');
   const btnTestLink = document.getElementById('btn-test-gen-link');
 
-  // Buka & Tutup Modal
-  if (btnOpenModal && modalLink) {
-    btnOpenModal.addEventListener('click', () => {
-      modalLink.classList.add('show');
-      updateGeneratorForm();
-      window.dinoAudio.playSfx('pop');
+  // Buka & Tutup Modal via Event Listener
+  if (btnOpenModal) {
+    btnOpenModal.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.openTeacherLinkModal();
     });
   }
 
-  if (btnCloseModal && modalLink) {
-    btnCloseModal.addEventListener('click', () => {
-      modalLink.classList.remove('show');
+  if (btnCloseModal) {
+    btnCloseModal.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.closeTeacherLinkModal();
     });
   }
 
   if (modalLink) {
     modalLink.addEventListener('click', (e) => {
-      if (e.target === modalLink) modalLink.classList.remove('show');
+      if (e.target === modalLink) window.closeTeacherLinkModal();
     });
   }
 
   // Penyesuaian form dinamis berdasarkan modul yang dipilih
-  function updateGeneratorForm() {
+  window.updateGeneratorForm = function() {
+    if (!genModSelect || !genBookSelect) return;
     const selectedMod = genModSelect.value;
     const bookVal = genBookSelect.value;
 
     if (selectedMod === 'stroke') {
       // Modul 1: Guratan
-      genBookGroup.style.display = 'block';
-      genUnitGroup.style.display = 'block';
-      genTargetGroup.style.display = 'block';
-      genTargetLabel.textContent = '4. Target Repetisi Tulis:';
-      genTargetSelect.innerHTML = `
-        <option value="3">3 Kali Tulis (Standard)</option>
-        <option value="4">4 Kali Tulis (Tantangan)</option>
-        <option value="5">5 Kali Tulis (Master Dino)</option>
-      `;
-      if (!genTaskName.value || genTaskName.value.startsWith('Tugas')) {
-        genTaskName.value = `PR Han Yu ${bookVal} Unit ${genUnitSelect.value} - Menulis Guratan`;
+      if (genBookGroup) genBookGroup.style.display = 'block';
+      if (genUnitGroup) genUnitGroup.style.display = 'block';
+      if (genTargetGroup) genTargetGroup.style.display = 'block';
+      if (genTargetLabel) genTargetLabel.textContent = '4. Target Repetisi Tulis:';
+      if (genTargetSelect) {
+        genTargetSelect.innerHTML = `
+          <option value="3" selected>3 Kali Tulis (Standard)</option>
+          <option value="4">4 Kali Tulis (Tantangan)</option>
+          <option value="5">5 Kali Tulis (Master Dino)</option>
+        `;
+      }
+      if (genTaskName && (!genTaskName.value || genTaskName.value.startsWith('Tugas') || genTaskName.value.startsWith('Kuis'))) {
+        genTaskName.value = `PR Han Yu ${bookVal} Unit ${genUnitSelect ? genUnitSelect.value : '1'} - Menulis Guratan`;
       }
     } else if (selectedMod === 'match') {
       // Modul 2: Game Cocok Gambar
-      genBookGroup.style.display = 'block';
-      genUnitGroup.style.display = 'none';
-      genTargetGroup.style.display = 'block';
-      genTargetLabel.textContent = '4. Jumlah Pasangan Kartu:';
-      genTargetSelect.innerHTML = `
-        <option value="4">Bayi Dino (4 Pasang)</option>
-        <option value="6" selected>Pemburu Fosil (6 Pasang)</option>
-        <option value="8">Raja Rimba (8 Pasang)</option>
-      `;
-      if (!genTaskName.value || genTaskName.value.startsWith('PR')) {
+      if (genBookGroup) genBookGroup.style.display = 'block';
+      if (genUnitGroup) genUnitGroup.style.display = 'none';
+      if (genTargetGroup) genTargetGroup.style.display = 'block';
+      if (genTargetLabel) genTargetLabel.textContent = '4. Jumlah Pasangan Kartu:';
+      if (genTargetSelect) {
+        genTargetSelect.innerHTML = `
+          <option value="4">Bayi Dino (4 Pasang)</option>
+          <option value="6" selected>Pemburu Fosil (6 Pasang)</option>
+          <option value="8">Raja Rimba (8 Pasang)</option>
+        `;
+      }
+      if (genTaskName && (!genTaskName.value || genTaskName.value.startsWith('PR') || genTaskName.value.startsWith('Kuis'))) {
         genTaskName.value = `Tugas Game Cocokkan Han Yu ${bookVal}`;
       }
     } else if (selectedMod === 'quiz') {
       // Modul 3: Kuis Guratan & Kosakata
-      genBookGroup.style.display = 'none';
-      genUnitGroup.style.display = 'none';
-      genTargetGroup.style.display = 'block';
-      genTargetLabel.textContent = '4. Kategori Kuis:';
-      genTargetSelect.innerHTML = `
-        <option value="stroke-only" selected>✍️ Khusus Jumlah Guratan (1, 3, 4, 5, 6, 7, 11)</option>
-        <option value="book-1">📖 Han Yu 1 (Dasar & Angka 1-10)</option>
-        <option value="book-2">📖 Han Yu 2 (Dinosaurus & Tubuh)</option>
-        <option value="book-3-12">📚 Han Yu 3 s/d 12 (Tingkat Lanjut)</option>
-        <option value="all">🌟 Semua Soal Campuran</option>
-      `;
-      genTaskName.value = `Kuis Jumlah Guratan & Kosakata Han Yu`;
+      if (genBookGroup) genBookGroup.style.display = 'none';
+      if (genUnitGroup) genUnitGroup.style.display = 'none';
+      if (genTargetGroup) genTargetGroup.style.display = 'block';
+      if (genTargetLabel) genTargetLabel.textContent = '4. Kategori Kuis:';
+      if (genTargetSelect) {
+        genTargetSelect.innerHTML = `
+          <option value="stroke-only" selected>✍️ Khusus Jumlah Guratan (1, 3, 4, 5, 6, 7, 11)</option>
+          <option value="book-1">📖 Han Yu 1 (Dasar & Angka 1-10)</option>
+          <option value="book-2">📖 Han Yu 2 (Dinosaurus & Tubuh)</option>
+          <option value="book-3-12">📚 Han Yu 3 s/d 12 (Tingkat Lanjut)</option>
+          <option value="all">🌟 Semua Soal Campuran</option>
+        `;
+      }
+      if (genTaskName) genTaskName.value = `Kuis Jumlah Guratan & Kosakata Han Yu`;
     }
 
     generateLiveUrl();
-  }
+  };
 
   function generateLiveUrl() {
-    if (!genLinkOutput) return;
+    if (!genLinkOutput || !genModSelect) return;
 
     const baseUrl = window.location.href.split('?')[0];
     const mod = genModSelect.value;
-    const book = genBookSelect.value;
-    const unit = genUnitSelect.value;
-    const target = genTargetSelect.value;
-    const taskTitle = encodeURIComponent(genTaskName.value.trim() || 'Tugas Siswa');
+    const book = genBookSelect ? genBookSelect.value : '1';
+    const unit = genUnitSelect ? genUnitSelect.value : '1';
+    const target = genTargetSelect ? genTargetSelect.value : '3';
+    const taskTitle = encodeURIComponent((genTaskName ? genTaskName.value.trim() : '') || 'Tugas Siswa');
 
     let query = `?mod=${mod}&task=${taskTitle}`;
 
@@ -186,19 +224,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Event Listeners Generator
-  if (genModSelect) genModSelect.addEventListener('change', updateGeneratorForm);
+  if (genModSelect) genModSelect.addEventListener('change', window.updateGeneratorForm);
   if (genBookSelect) genBookSelect.addEventListener('change', () => {
-    // Sesuaikan nama tugas
     if (genModSelect.value === 'stroke') {
-      genTaskName.value = `PR Han Yu ${genBookSelect.value} Unit ${genUnitSelect.value} - Menulis Guratan`;
+      if (genTaskName) genTaskName.value = `PR Han Yu ${genBookSelect.value} Unit ${genUnitSelect ? genUnitSelect.value : '1'} - Menulis Guratan`;
     } else if (genModSelect.value === 'match') {
-      genTaskName.value = `Tugas Game Cocokkan Han Yu ${genBookSelect.value}`;
+      if (genTaskName) genTaskName.value = `Tugas Game Cocokkan Han Yu ${genBookSelect.value}`;
     }
     generateLiveUrl();
   });
   if (genUnitSelect) genUnitSelect.addEventListener('change', () => {
     if (genModSelect.value === 'stroke') {
-      genTaskName.value = `PR Han Yu ${genBookSelect.value} Unit ${genUnitSelect.value} - Menulis Guratan`;
+      if (genTaskName) genTaskName.value = `PR Han Yu ${genBookSelect ? genBookSelect.value : '1'} Unit ${genUnitSelect.value} - Menulis Guratan`;
     }
     generateLiveUrl();
   });
@@ -212,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         genLinkOutput.select();
         navigator.clipboard.writeText(genLinkOutput.value).then(() => {
           btnCopyLink.innerHTML = '✅ Link Tersalin!';
-          window.dinoAudio.playSfx('correct');
+          if (window.dinoAudio) window.dinoAudio.playSfx('correct');
           setTimeout(() => {
             btnCopyLink.innerHTML = '<span>📋</span> Salin Link';
           }, 2000);
@@ -230,8 +267,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Kirim ke WhatsApp
   if (btnShareWA) {
     btnShareWA.addEventListener('click', () => {
-      const taskName = genTaskName.value.trim() || 'Tugas Bahasa Mandarin';
-      const link = genLinkOutput.value;
+      const taskName = (genTaskName ? genTaskName.value.trim() : '') || 'Tugas Bahasa Mandarin';
+      const link = genLinkOutput ? genLinkOutput.value : window.location.href;
       const message = `🦖 *DINO MANDARIN ADVENTURE - TUGAS SISWA*\n\n` +
                       `Halo semuanya! Silakan buka tautan berikut untuk mengerjakan:\n` +
                       `📌 *${taskName}*\n\n` +
@@ -246,8 +283,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Uji Buka Link Ini Sekarang
   if (btnTestLink) {
     btnTestLink.addEventListener('click', () => {
-      if (modalLink) modalLink.classList.remove('show');
-      window.location.href = genLinkOutput.value;
+      window.closeTeacherLinkModal();
+      if (genLinkOutput && genLinkOutput.value) {
+        window.location.href = genLinkOutput.value;
+      }
     });
   }
 
