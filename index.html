@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -16,6 +16,162 @@
 
   <!-- HanziWriter Engine CDN -->
   <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+
+  <!-- Immediate Global Modal & Link Controller (Guaranteed 100% Clickable from 0ms) -->
+  <script>
+    window.openTeacherLinkModal = function() {
+      var modal = document.getElementById('teacher-link-modal');
+      if (modal) {
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
+        modal.style.pointerEvents = 'auto';
+        if (typeof window.refreshTeacherTaskLink === 'function') {
+          window.refreshTeacherTaskLink(true);
+        }
+        if (window.dinoAudio && typeof window.dinoAudio.playSfx === 'function') {
+          window.dinoAudio.playSfx('pop');
+        }
+      }
+    };
+
+    window.closeTeacherLinkModal = function() {
+      var modal = document.getElementById('teacher-link-modal');
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+      }
+    };
+
+    window.refreshTeacherTaskLink = function(isBookChanged) {
+      var modSel = document.getElementById('gen-module-select');
+      var bookSel = document.getElementById('gen-book-select');
+      var unitSel = document.getElementById('gen-unit-select');
+      var targetSel = document.getElementById('gen-target-select');
+      var taskInput = document.getElementById('gen-task-name');
+      var linkOutput = document.getElementById('gen-link-output');
+      var linkHref = document.getElementById('gen-link-href');
+      var bookGrp = document.getElementById('gen-book-group');
+      var unitGrp = document.getElementById('gen-unit-group');
+      var targetGrp = document.getElementById('gen-target-group');
+      var targetLbl = document.getElementById('gen-target-label');
+
+      if (!modSel || !linkOutput) return;
+
+      var mod = modSel.value || 'stroke';
+      var book = (bookSel ? bookSel.value : '1') || '1';
+
+      // Rebuild unit titles dynamically
+      if (unitSel && (isBookChanged || unitSel.options.length <= 1 || !unitSel.options[0].text.includes('('))) {
+        var bId = parseInt(book) || 1;
+        var unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
+        var curVal = unitSel.value || '1';
+        var html = '';
+        for (var u = 1; u <= 10; u++) {
+          var title = unitTitlesMap[u] || ('Unit ' + u);
+          html += '<option value="' + u + '" ' + (u == curVal ? 'selected' : '') + '>Unit ' + u + ' (' + title + ')</option>';
+        }
+        unitSel.innerHTML = html;
+      }
+
+      var unit = (unitSel ? unitSel.value : '1') || '1';
+      var target = (targetSel ? targetSel.value : '3') || '3';
+
+      if (mod === 'stroke') {
+        if (bookGrp) bookGrp.style.display = 'block';
+        if (unitGrp) unitGrp.style.display = 'block';
+        if (targetGrp) targetGrp.style.display = 'block';
+        if (targetLbl) targetLbl.textContent = '4. Target Repetisi Tulis:';
+        if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.indexOf('PR') === 0 || taskInput.value.indexOf('Tugas') === 0)) {
+          var bId = parseInt(book) || 1;
+          var unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
+          var uName = unitTitlesMap[unit] || '';
+          taskInput.value = 'PR Han Yu ' + book + ' Unit ' + unit + (uName ? ' (' + uName + ')' : '');
+        }
+      } else if (mod === 'match') {
+        if (bookGrp) bookGrp.style.display = 'block';
+        if (unitGrp) unitGrp.style.display = 'none';
+        if (targetGrp) targetGrp.style.display = 'block';
+        if (targetLbl) targetLbl.textContent = '4. Jumlah Pasangan Kartu:';
+        if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.indexOf('PR') === 0 || taskInput.value.indexOf('Tugas') === 0)) {
+          taskInput.value = 'Tugas Game Cocokkan Han Yu ' + book;
+        }
+      } else if (mod === 'quiz') {
+        if (bookGrp) bookGrp.style.display = 'none';
+        if (unitGrp) unitGrp.style.display = 'none';
+        if (targetGrp) targetGrp.style.display = 'block';
+        if (targetLbl) targetLbl.textContent = '4. Kategori Kuis:';
+        if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.indexOf('PR') === 0 || taskInput.value.indexOf('Tugas') === 0)) {
+          taskInput.value = 'Kuis Jumlah Guratan & Kosakata Han Yu';
+        }
+      }
+
+      var taskTitle = encodeURIComponent((taskInput ? taskInput.value.trim() : '') || 'Tugas Siswa');
+      var baseUrl = window.location.href.split('?')[0];
+
+      var query = '?mod=' + mod + '&task=' + taskTitle;
+      if (mod === 'stroke') {
+        query += '&book=' + book + '&unit=' + unit + '&reps=' + target;
+      } else if (mod === 'match') {
+        query += '&book=' + book + '&pairs=' + target;
+      } else if (mod === 'quiz') {
+        query += '&qmode=' + target;
+      }
+
+      var fullUrl = baseUrl + query;
+      linkOutput.value = fullUrl;
+      if (linkHref) {
+        linkHref.href = fullUrl;
+      }
+    };
+
+    window.updateGeneratorForm = window.refreshTeacherTaskLink;
+
+    window.copyTeacherTaskLink = function() {
+      var linkOutput = document.getElementById('gen-link-output');
+      var btnCopy = document.getElementById('btn-copy-gen-link');
+      if (linkOutput && linkOutput.value) {
+        linkOutput.select();
+        try {
+          navigator.clipboard.writeText(linkOutput.value).then(function() {
+            if (btnCopy) btnCopy.innerHTML = '✅ Link Tersalin!';
+            setTimeout(function() { if (btnCopy) btnCopy.innerHTML = '<span>📋</span> Salin Link'; }, 2000);
+          }).catch(function() {
+            document.execCommand('copy');
+            if (btnCopy) btnCopy.innerHTML = '✅ Link Tersalin!';
+            setTimeout(function() { if (btnCopy) btnCopy.innerHTML = '<span>📋</span> Salin Link'; }, 2000);
+          });
+        } catch(e) {
+          document.execCommand('copy');
+          if (btnCopy) btnCopy.innerHTML = '✅ Link Tersalin!';
+          setTimeout(function() { if (btnCopy) btnCopy.innerHTML = '<span>📋</span> Salin Link'; }, 2000);
+        }
+      }
+    };
+
+    window.shareTeacherTaskWA = function() {
+      var linkOutput = document.getElementById('gen-link-output');
+      var taskInput = document.getElementById('gen-task-name');
+      var taskName = (taskInput ? taskInput.value.trim() : '') || 'Tugas Bahasa Mandarin';
+      var link = linkOutput ? linkOutput.value : window.location.href;
+      var message = '🦖 *DINO MANDARIN ADVENTURE - TUGAS SISWA*\n\n' +
+                    'Halo semuanya! Silakan buka tautan berikut untuk mengerjakan:\n' +
+                    '📌 *' + taskName + '*\n\n' +
+                    '🔗 *Link Latihan:* ' + link + '\n\n' +
+                    'Selamat belajar dan kumpulkan telur dinosaurusnya! 🦕✨';
+      
+      window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(message), '_blank');
+    };
+
+    window.testTeacherTaskLink = function() {
+      var linkOutput = document.getElementById('gen-link-output');
+      if (linkOutput && linkOutput.value && linkOutput.value.indexOf('...') === -1) {
+        window.closeTeacherLinkModal();
+        window.location.href = linkOutput.value;
+      }
+    };
+  </script>
 
   <!-- External Stylesheets (Fallback) -->
   <link rel="stylesheet" href="css/style.css">
