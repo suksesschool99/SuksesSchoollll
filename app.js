@@ -132,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const mod = modSel.value || 'stroke';
     const book = (bookSel ? bookSel.value : '1') || '1';
 
-    // Rebuild unit titles dynamically if book changed or options lack detail
-    if (unitSel && (isBookChanged || unitSel.options.length <= 1 || !unitSel.options[0].text.includes('('))) {
+    // Rebuild unit titles dynamically if book changed
+    if (unitSel && (isBookChanged || !unitSel.options.length || !unitSel.options[0].text.includes('('))) {
       const bId = parseInt(book) || 1;
       const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
       const curVal = unitSel.value || '1';
@@ -143,20 +143,21 @@ document.addEventListener('DOMContentLoaded', () => {
         html += `<option value="${u}" ${u == curVal ? 'selected' : ''}>Unit ${u} (${title})</option>`;
       }
       unitSel.innerHTML = html;
+      unitSel.value = curVal;
     }
 
     const unit = (unitSel ? unitSel.value : '1') || '1';
     const target = (targetSel ? targetSel.value : '3') || '3';
+    const bId = parseInt(book) || 1;
+    const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
+    const uName = unitTitlesMap[unit] || '';
 
     if (mod === 'stroke') {
       if (bookGrp) bookGrp.style.display = 'block';
       if (unitGrp) unitGrp.style.display = 'block';
       if (targetGrp) targetGrp.style.display = 'block';
       if (targetLbl) targetLbl.textContent = '4. Target Repetisi Tulis:';
-      if (isBookChanged && taskInput) {
-        const bId = parseInt(book) || 1;
-        const unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
-        const uName = unitTitlesMap[unit] || '';
+      if (taskInput) {
         taskInput.value = `PR Han Yu ${book} Unit ${unit}${uName ? ' (' + uName + ')' : ''}`;
       }
     } else if (mod === 'match') {
@@ -164,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (unitGrp) unitGrp.style.display = 'none';
       if (targetGrp) targetGrp.style.display = 'block';
       if (targetLbl) targetLbl.textContent = '4. Jumlah Pasangan Kartu:';
-      if (isBookChanged && taskInput) {
+      if (taskInput) {
         taskInput.value = `Tugas Game Cocokkan Han Yu ${book}`;
       }
     } else if (mod === 'quiz') {
@@ -172,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (unitGrp) unitGrp.style.display = 'none';
       if (targetGrp) targetGrp.style.display = 'block';
       if (targetLbl) targetLbl.textContent = '4. Kategori Kuis:';
-      if (isBookChanged && taskInput) {
+      if (taskInput) {
         taskInput.value = `Kuis Jumlah Guratan & Kosakata Han Yu`;
       }
     }
@@ -195,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const linkHref = document.getElementById('gen-link-href');
     if (linkHref) {
       linkHref.href = fullUrl;
+      linkHref.textContent = '🌐 Buka Link Tugas di Tab Baru';
     }
   };
 

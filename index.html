@@ -62,8 +62,8 @@
       var mod = modSel.value || 'stroke';
       var book = (bookSel ? bookSel.value : '1') || '1';
 
-      // Rebuild unit titles dynamically
-      if (unitSel && (isBookChanged || unitSel.options.length <= 1 || !unitSel.options[0].text.includes('('))) {
+      // Rebuild unit titles dynamically if book changed
+      if (unitSel && (isBookChanged || !unitSel.options.length || !unitSel.options[0].text.includes('('))) {
         var bId = parseInt(book) || 1;
         var unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
         var curVal = unitSel.value || '1';
@@ -73,20 +73,21 @@
           html += '<option value="' + u + '" ' + (u == curVal ? 'selected' : '') + '>Unit ' + u + ' (' + title + ')</option>';
         }
         unitSel.innerHTML = html;
+        unitSel.value = curVal;
       }
 
       var unit = (unitSel ? unitSel.value : '1') || '1';
       var target = (targetSel ? targetSel.value : '3') || '3';
+      var bId = parseInt(book) || 1;
+      var unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
+      var uName = unitTitlesMap[unit] || '';
 
       if (mod === 'stroke') {
         if (bookGrp) bookGrp.style.display = 'block';
         if (unitGrp) unitGrp.style.display = 'block';
         if (targetGrp) targetGrp.style.display = 'block';
         if (targetLbl) targetLbl.textContent = '4. Target Repetisi Tulis:';
-        if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.indexOf('PR') === 0 || taskInput.value.indexOf('Tugas') === 0)) {
-          var bId = parseInt(book) || 1;
-          var unitTitlesMap = (window.DINO_DATA && window.DINO_DATA.unitTitles && window.DINO_DATA.unitTitles[bId]) || {};
-          var uName = unitTitlesMap[unit] || '';
+        if (taskInput) {
           taskInput.value = 'PR Han Yu ' + book + ' Unit ' + unit + (uName ? ' (' + uName + ')' : '');
         }
       } else if (mod === 'match') {
@@ -94,7 +95,7 @@
         if (unitGrp) unitGrp.style.display = 'none';
         if (targetGrp) targetGrp.style.display = 'block';
         if (targetLbl) targetLbl.textContent = '4. Jumlah Pasangan Kartu:';
-        if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.indexOf('PR') === 0 || taskInput.value.indexOf('Tugas') === 0)) {
+        if (taskInput) {
           taskInput.value = 'Tugas Game Cocokkan Han Yu ' + book;
         }
       } else if (mod === 'quiz') {
@@ -102,7 +103,7 @@
         if (unitGrp) unitGrp.style.display = 'none';
         if (targetGrp) targetGrp.style.display = 'block';
         if (targetLbl) targetLbl.textContent = '4. Kategori Kuis:';
-        if (taskInput && (isBookChanged || !taskInput.value || taskInput.value.indexOf('PR') === 0 || taskInput.value.indexOf('Tugas') === 0)) {
+        if (taskInput) {
           taskInput.value = 'Kuis Jumlah Guratan & Kosakata Han Yu';
         }
       }
@@ -123,6 +124,7 @@
       linkOutput.value = fullUrl;
       if (linkHref) {
         linkHref.href = fullUrl;
+        linkHref.textContent = '🌐 Buka Link Tugas di Tab Baru';
       }
     };
 
@@ -5511,6 +5513,8 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 </body>
 </html>
+
+
 
 
 
